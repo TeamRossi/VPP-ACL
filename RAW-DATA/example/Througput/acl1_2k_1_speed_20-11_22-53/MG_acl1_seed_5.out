@@ -1,0 +1,629 @@
+
+
+_____0\_____
+
+[1;33m[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.[0m
+[1;33m[WARN]  Install libjemalloc if you encounter out of memory errors.[0m
+[1;37m[INFO]  Initializing DPDK. This will take a few seconds...[0m
+EAL: Probing VFIO support...
+EAL: PCI device 0000:84:00.0 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+EAL: PCI device 0000:84:00.1 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+[1;37m[INFO]  Found 2 usable devices:[0m
+   Device 0: 90:E2:BA:CB:F5:44 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+   Device 1: 90:E2:BA:CB:F5:45 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+PMD: ixgbe_dev_link_status_print():  Port 1: Link Down
+PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
+Valerio parser
+Filename: /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Error with file! /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Tot_rules: 1835
+Tcp: 1608 |Udp: 180 |Icmp: 47
+Valerio parser end
+[1;37m[INFO]  Waiting for devices to come up...[0m
+[1;37m[INFO]  Device 0 (90:E2:BA:CB:F5:44) is up: 10000 MBit/s[0m
+[1;37m[INFO]  Device 1 (90:E2:BA:CB:F5:45) is up: 10000 MBit/s[0m
+[1;37m[INFO]  [0;32m2 devices are up.[0m[0m
+[RX - dev]: { 0 } 
+[TX - dev]: { 1 } 
+Pkt size: 60
+TX rate: 0 rateq1: 0 rateq2: 0 rateq3: 0
+==========VVV=============
+RX: 0.21 (0.00) Mpps, 110 (0) Mbit/s | 3225617 pkts, 206439488 Bytes
+TX: 14.83 (0.18) Mpps, 7594 (91) Mbit/s | 223148583 pkts, 14281509312 Bytes
+==========V=============
+_____2500\_____
+
+[1;33m[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.[0m
+[1;33m[WARN]  Install libjemalloc if you encounter out of memory errors.[0m
+[1;37m[INFO]  Initializing DPDK. This will take a few seconds...[0m
+EAL: Probing VFIO support...
+EAL: PCI device 0000:84:00.0 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+EAL: PCI device 0000:84:00.1 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+[1;37m[INFO]  Found 2 usable devices:[0m
+   Device 0: 90:E2:BA:CB:F5:44 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+   Device 1: 90:E2:BA:CB:F5:45 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+PMD: ixgbe_dev_link_status_print():  Port 1: Link Down
+PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
+Valerio parser
+Filename: /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Error with file! /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Tot_rules: 1835
+Tcp: 1608 |Udp: 180 |Icmp: 47
+Valerio parser end
+[1;37m[INFO]  Waiting for devices to come up...[0m
+[1;37m[INFO]  Device 0 (90:E2:BA:CB:F5:44) is up: 10000 MBit/s[0m
+[1;37m[INFO]  Device 1 (90:E2:BA:CB:F5:45) is up: 10000 MBit/s[0m
+[1;37m[INFO]  [0;32m2 devices are up.[0m[0m
+[RX - dev]: { 0 } 
+[TX - dev]: { 1 } 
+Pkt size: 60
+TX rate: 2500 rateq1: 2500 rateq2: 2500 rateq3: 2500
+==========VVV=============
+RX: 0.21 (0.00) Mpps, 109 (0) Mbit/s | 3210240 pkts, 205455360 Bytes
+TX: 12.13 (0.19) Mpps, 6212 (99) Mbit/s | 182651805 pkts, 11689715520 Bytes
+==========V=============
+_____2250\_____
+
+[1;33m[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.[0m
+[1;33m[WARN]  Install libjemalloc if you encounter out of memory errors.[0m
+[1;37m[INFO]  Initializing DPDK. This will take a few seconds...[0m
+EAL: Probing VFIO support...
+EAL: PCI device 0000:84:00.0 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+EAL: PCI device 0000:84:00.1 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+[1;37m[INFO]  Found 2 usable devices:[0m
+   Device 0: 90:E2:BA:CB:F5:44 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+   Device 1: 90:E2:BA:CB:F5:45 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+PMD: ixgbe_dev_link_status_print():  Port 1: Link Down
+PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
+Valerio parser
+Filename: /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Error with file! /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Tot_rules: 1835
+Tcp: 1608 |Udp: 180 |Icmp: 47
+Valerio parser end
+[1;37m[INFO]  Waiting for devices to come up...[0m
+[1;37m[INFO]  Device 1 (90:E2:BA:CB:F5:45) is up: 10000 MBit/s[0m
+[1;37m[INFO]  Device 0 (90:E2:BA:CB:F5:44) is up: 10000 MBit/s[0m
+[1;37m[INFO]  [0;32m2 devices are up.[0m[0m
+[RX - dev]: { 0 } 
+[TX - dev]: { 1 } 
+Pkt size: 60
+TX rate: 2250 rateq1: 2250 rateq2: 2250 rateq3: 2250
+==========VVV=============
+RX: 0.21 (0.00) Mpps, 108 (0) Mbit/s | 3166208 pkts, 202637312 Bytes
+TX: 11.45 (0.16) Mpps, 5865 (80) Mbit/s | 172328058 pkts, 11028995712 Bytes
+==========V=============
+_____2100\_____
+
+[1;33m[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.[0m
+[1;33m[WARN]  Install libjemalloc if you encounter out of memory errors.[0m
+[1;37m[INFO]  Initializing DPDK. This will take a few seconds...[0m
+EAL: Probing VFIO support...
+EAL: PCI device 0000:84:00.0 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+EAL: PCI device 0000:84:00.1 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+[1;37m[INFO]  Found 2 usable devices:[0m
+   Device 0: 90:E2:BA:CB:F5:44 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+   Device 1: 90:E2:BA:CB:F5:45 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+PMD: ixgbe_dev_link_status_print():  Port 1: Link Down
+PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
+Valerio parser
+Filename: /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Error with file! /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Tot_rules: 1835
+Tcp: 1608 |Udp: 180 |Icmp: 47
+Valerio parser end
+[1;37m[INFO]  Waiting for devices to come up...[0m
+[1;37m[INFO]  Device 1 (90:E2:BA:CB:F5:45) is up: 10000 MBit/s[0m
+[1;37m[INFO]  Device 0 (90:E2:BA:CB:F5:44) is up: 10000 MBit/s[0m
+[1;37m[INFO]  [0;32m2 devices are up.[0m[0m
+[RX - dev]: { 0 } 
+[TX - dev]: { 1 } 
+Pkt size: 60
+TX rate: 2100 rateq1: 2100 rateq2: 2100 rateq3: 2100
+==========VVV=============
+RX: 0.21 (0.00) Mpps, 108 (0) Mbit/s | 3170816 pkts, 202932224 Bytes
+TX: 10.75 (0.16) Mpps, 5507 (83) Mbit/s | 161862939 pkts, 10359228096 Bytes
+==========V=============
+_____2000\_____
+
+[1;33m[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.[0m
+[1;33m[WARN]  Install libjemalloc if you encounter out of memory errors.[0m
+[1;37m[INFO]  Initializing DPDK. This will take a few seconds...[0m
+EAL: Probing VFIO support...
+EAL: PCI device 0000:84:00.0 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+EAL: PCI device 0000:84:00.1 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+[1;37m[INFO]  Found 2 usable devices:[0m
+   Device 0: 90:E2:BA:CB:F5:44 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+   Device 1: 90:E2:BA:CB:F5:45 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+PMD: ixgbe_dev_link_status_print():  Port 1: Link Down
+PMD: ixgbe_dev_link_status_print(): Port 0: Link Up - speed 0 Mbps - half-duplex
+Valerio parser
+Filename: /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Error with file! /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Tot_rules: 1835
+Tcp: 1608 |Udp: 180 |Icmp: 47
+Valerio parser end
+[1;37m[INFO]  Waiting for devices to come up...[0m
+[1;37m[INFO]  Device 0 (90:E2:BA:CB:F5:44) is up: 10000 MBit/s[0m
+[1;37m[INFO]  Device 1 (90:E2:BA:CB:F5:45) is up: 10000 MBit/s[0m
+[1;37m[INFO]  [0;32m2 devices are up.[0m[0m
+[RX - dev]: { 0 } 
+[TX - dev]: { 1 } 
+Pkt size: 60
+TX rate: 2000 rateq1: 2000 rateq2: 2000 rateq3: 2000
+==========VVV=============
+RX: 0.21 (0.00) Mpps, 108 (0) Mbit/s | 3176192 pkts, 203276288 Bytes
+TX: 10.21 (0.16) Mpps, 5225 (79) Mbit/s | 153629784 pkts, 9832306176 Bytes
+==========V=============
+_____1750\_____
+
+[1;33m[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.[0m
+[1;33m[WARN]  Install libjemalloc if you encounter out of memory errors.[0m
+[1;37m[INFO]  Initializing DPDK. This will take a few seconds...[0m
+EAL: Probing VFIO support...
+EAL: PCI device 0000:84:00.0 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+EAL: PCI device 0000:84:00.1 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+[1;37m[INFO]  Found 2 usable devices:[0m
+   Device 0: 90:E2:BA:CB:F5:44 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+   Device 1: 90:E2:BA:CB:F5:45 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+PMD: ixgbe_dev_link_status_print():  Port 1: Link Down
+PMD: ixgbe_dev_link_status_print(): Port 0: Link Up - speed 0 Mbps - half-duplex
+Valerio parser
+Filename: /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Error with file! /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Tot_rules: 1835
+Tcp: 1608 |Udp: 180 |Icmp: 47
+Valerio parser end
+[1;37m[INFO]  Waiting for devices to come up...[0m
+[1;37m[INFO]  Device 0 (90:E2:BA:CB:F5:44) is up: 10000 MBit/s[0m
+[1;37m[INFO]  Device 1 (90:E2:BA:CB:F5:45) is up: 10000 MBit/s[0m
+[1;37m[INFO]  [0;32m2 devices are up.[0m[0m
+[RX - dev]: { 0 } 
+[TX - dev]: { 1 } 
+Pkt size: 60
+TX rate: 1750 rateq1: 1750 rateq2: 1750 rateq3: 1750
+==========VVV=============
+RX: 0.21 (0.00) Mpps, 107 (0) Mbit/s | 3153664 pkts, 201834496 Bytes
+TX: 9.22 (0.15) Mpps, 4719 (76) Mbit/s | 138653487 pkts, 8873823168 Bytes
+==========V=============
+_____1500\_____
+
+[1;33m[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.[0m
+[1;33m[WARN]  Install libjemalloc if you encounter out of memory errors.[0m
+[1;37m[INFO]  Initializing DPDK. This will take a few seconds...[0m
+EAL: Probing VFIO support...
+EAL: PCI device 0000:84:00.0 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+EAL: PCI device 0000:84:00.1 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+[1;37m[INFO]  Found 2 usable devices:[0m
+   Device 0: 90:E2:BA:CB:F5:44 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+   Device 1: 90:E2:BA:CB:F5:45 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+PMD: ixgbe_dev_link_status_print():  Port 1: Link Down
+PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
+Valerio parser
+Filename: /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Error with file! /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Tot_rules: 1835
+Tcp: 1608 |Udp: 180 |Icmp: 47
+Valerio parser end
+[1;37m[INFO]  Waiting for devices to come up...[0m
+[1;37m[INFO]  Device 1 (90:E2:BA:CB:F5:45) is up: 10000 MBit/s[0m
+[1;37m[INFO]  Device 0 (90:E2:BA:CB:F5:44) is up: 10000 MBit/s[0m
+[1;37m[INFO]  [0;32m2 devices are up.[0m[0m
+[RX - dev]: { 0 } 
+[TX - dev]: { 1 } 
+Pkt size: 60
+TX rate: 1500 rateq1: 1500 rateq2: 1500 rateq3: 1500
+==========VVV=============
+RX: 0.19 (0.06) Mpps, 96 (30) Mbit/s | 2637841 pkts, 168821824 Bytes
+TX: 8.23 (0.13) Mpps, 4216 (69) Mbit/s | 123963210 pkts, 7933645440 Bytes
+==========V=============
+_____1250\_____
+
+[1;33m[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.[0m
+[1;33m[WARN]  Install libjemalloc if you encounter out of memory errors.[0m
+[1;37m[INFO]  Initializing DPDK. This will take a few seconds...[0m
+EAL: Probing VFIO support...
+EAL: PCI device 0000:84:00.0 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+EAL: PCI device 0000:84:00.1 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+[1;37m[INFO]  Found 2 usable devices:[0m
+   Device 0: 90:E2:BA:CB:F5:44 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+   Device 1: 90:E2:BA:CB:F5:45 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+PMD: ixgbe_dev_link_status_print():  Port 1: Link Down
+PMD: ixgbe_dev_link_status_print(): Port 0: Link Up - speed 0 Mbps - half-duplex
+Valerio parser
+Filename: /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Error with file! /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Tot_rules: 1835
+Tcp: 1608 |Udp: 180 |Icmp: 47
+Valerio parser end
+[1;37m[INFO]  Waiting for devices to come up...[0m
+[1;37m[INFO]  Device 0 (90:E2:BA:CB:F5:44) is up: 10000 MBit/s[0m
+[1;37m[INFO]  Device 1 (90:E2:BA:CB:F5:45) is up: 10000 MBit/s[0m
+[1;37m[INFO]  [0;32m2 devices are up.[0m[0m
+[RX - dev]: { 0 } 
+[TX - dev]: { 1 } 
+Pkt size: 60
+TX rate: 1250 rateq1: 1250 rateq2: 1250 rateq3: 1250
+==========VVV=============
+RX: 0.21 (0.00) Mpps, 106 (0) Mbit/s | 3107328 pkts, 198868992 Bytes
+TX: 7.08 (0.09) Mpps, 3627 (46) Mbit/s | 106519518 pkts, 6817249152 Bytes
+==========V=============
+_____1000\_____
+
+[1;33m[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.[0m
+[1;33m[WARN]  Install libjemalloc if you encounter out of memory errors.[0m
+[1;37m[INFO]  Initializing DPDK. This will take a few seconds...[0m
+EAL: Probing VFIO support...
+EAL: PCI device 0000:84:00.0 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+EAL: PCI device 0000:84:00.1 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+[1;37m[INFO]  Found 2 usable devices:[0m
+   Device 0: 90:E2:BA:CB:F5:44 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+   Device 1: 90:E2:BA:CB:F5:45 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+PMD: ixgbe_dev_link_status_print():  Port 1: Link Down
+PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
+Valerio parser
+Filename: /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Error with file! /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Tot_rules: 1835
+Tcp: 1608 |Udp: 180 |Icmp: 47
+Valerio parser end
+[1;37m[INFO]  Waiting for devices to come up...[0m
+[1;37m[INFO]  Device 0 (90:E2:BA:CB:F5:44) is up: 10000 MBit/s[0m
+[1;37m[INFO]  Device 1 (90:E2:BA:CB:F5:45) is up: 10000 MBit/s[0m
+[1;37m[INFO]  [0;32m2 devices are up.[0m[0m
+[RX - dev]: { 0 } 
+[TX - dev]: { 1 } 
+Pkt size: 60
+TX rate: 1000 rateq1: 1000 rateq2: 1000 rateq3: 1000
+==========VVV=============
+RX: 0.21 (0.00) Mpps, 105 (0) Mbit/s | 3106816 pkts, 198836224 Bytes
+TX: 5.72 (0.09) Mpps, 2929 (45) Mbit/s | 86094288 pkts, 5510034432 Bytes
+==========V=============
+_____750\_____
+
+[1;33m[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.[0m
+[1;33m[WARN]  Install libjemalloc if you encounter out of memory errors.[0m
+[1;37m[INFO]  Initializing DPDK. This will take a few seconds...[0m
+EAL: Probing VFIO support...
+EAL: PCI device 0000:84:00.0 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+EAL: PCI device 0000:84:00.1 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+[1;37m[INFO]  Found 2 usable devices:[0m
+   Device 0: 90:E2:BA:CB:F5:44 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+   Device 1: 90:E2:BA:CB:F5:45 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+PMD: ixgbe_dev_link_status_print():  Port 1: Link Down
+PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
+Valerio parser
+Filename: /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Error with file! /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Tot_rules: 1835
+Tcp: 1608 |Udp: 180 |Icmp: 47
+Valerio parser end
+[1;37m[INFO]  Waiting for devices to come up...[0m
+[1;37m[INFO]  Device 0 (90:E2:BA:CB:F5:44) is up: 10000 MBit/s[0m
+[1;37m[INFO]  Device 1 (90:E2:BA:CB:F5:45) is up: 10000 MBit/s[0m
+[1;37m[INFO]  [0;32m2 devices are up.[0m[0m
+[RX - dev]: { 0 } 
+[TX - dev]: { 1 } 
+Pkt size: 60
+TX rate: 750 rateq1: 750 rateq2: 750 rateq3: 750
+==========VVV=============
+RX: 0.21 (0.00) Mpps, 105 (0) Mbit/s | 3083008 pkts, 197312512 Bytes
+TX: 4.38 (0.06) Mpps, 2243 (31) Mbit/s | 65930445 pkts, 4219548480 Bytes
+==========V=============
+_____500\_____
+
+[1;33m[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.[0m
+[1;33m[WARN]  Install libjemalloc if you encounter out of memory errors.[0m
+[1;37m[INFO]  Initializing DPDK. This will take a few seconds...[0m
+EAL: Probing VFIO support...
+EAL: PCI device 0000:84:00.0 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+EAL: PCI device 0000:84:00.1 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+[1;37m[INFO]  Found 2 usable devices:[0m
+   Device 0: 90:E2:BA:CB:F5:44 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+   Device 1: 90:E2:BA:CB:F5:45 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+PMD: ixgbe_dev_link_status_print():  Port 1: Link Down
+PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
+Valerio parser
+Filename: /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Error with file! /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Tot_rules: 1835
+Tcp: 1608 |Udp: 180 |Icmp: 47
+Valerio parser end
+[1;37m[INFO]  Waiting for devices to come up...[0m
+[1;37m[INFO]  Device 1 (90:E2:BA:CB:F5:45) is up: 10000 MBit/s[0m
+[1;37m[INFO]  Device 0 (90:E2:BA:CB:F5:44) is up: 10000 MBit/s[0m
+[1;37m[INFO]  [0;32m2 devices are up.[0m[0m
+[RX - dev]: { 0 } 
+[TX - dev]: { 1 } 
+Pkt size: 60
+TX rate: 500 rateq1: 500 rateq2: 500 rateq3: 500
+==========VVV=============
+RX: 0.21 (0.00) Mpps, 105 (0) Mbit/s | 3091968 pkts, 197885952 Bytes
+TX: 2.92 (0.04) Mpps, 1495 (19) Mbit/s | 43939602 pkts, 2812134528 Bytes
+==========V=============
+_____250\_____
+
+[1;33m[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.[0m
+[1;33m[WARN]  Install libjemalloc if you encounter out of memory errors.[0m
+[1;37m[INFO]  Initializing DPDK. This will take a few seconds...[0m
+EAL: Probing VFIO support...
+EAL: PCI device 0000:84:00.0 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+EAL: PCI device 0000:84:00.1 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+[1;37m[INFO]  Found 2 usable devices:[0m
+   Device 0: 90:E2:BA:CB:F5:44 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+   Device 1: 90:E2:BA:CB:F5:45 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+PMD: ixgbe_dev_link_status_print():  Port 1: Link Down
+PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
+Valerio parser
+Filename: /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Error with file! /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Tot_rules: 1835
+Tcp: 1608 |Udp: 180 |Icmp: 47
+Valerio parser end
+[1;37m[INFO]  Waiting for devices to come up...[0m
+[1;37m[INFO]  Device 1 (90:E2:BA:CB:F5:45) is up: 10000 MBit/s[0m
+[1;37m[INFO]  Device 0 (90:E2:BA:CB:F5:44) is up: 10000 MBit/s[0m
+[1;37m[INFO]  [0;32m2 devices are up.[0m[0m
+[RX - dev]: { 0 } 
+[TX - dev]: { 1 } 
+Pkt size: 60
+TX rate: 250 rateq1: 250 rateq2: 250 rateq3: 250
+==========VVV=============
+RX: 0.21 (0.00) Mpps, 105 (0) Mbit/s | 3086080 pkts, 197509120 Bytes
+TX: 1.46 (0.02) Mpps, 748 (8) Mbit/s | 21973455 pkts, 1406301120 Bytes
+==========V=============
+_____100\_____
+
+[1;33m[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.[0m
+[1;33m[WARN]  Install libjemalloc if you encounter out of memory errors.[0m
+[1;37m[INFO]  Initializing DPDK. This will take a few seconds...[0m
+EAL: Probing VFIO support...
+EAL: PCI device 0000:84:00.0 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+EAL: PCI device 0000:84:00.1 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+[1;37m[INFO]  Found 2 usable devices:[0m
+   Device 0: 90:E2:BA:CB:F5:44 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+   Device 1: 90:E2:BA:CB:F5:45 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+PMD: ixgbe_dev_link_status_print():  Port 1: Link Down
+PMD: ixgbe_dev_link_status_print(): Port 0: Link Up - speed 0 Mbps - half-duplex
+Valerio parser
+Filename: /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Error with file! /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Tot_rules: 1835
+Tcp: 1608 |Udp: 180 |Icmp: 47
+Valerio parser end
+[1;37m[INFO]  Waiting for devices to come up...[0m
+[1;37m[INFO]  Device 1 (90:E2:BA:CB:F5:45) is up: 10000 MBit/s[0m
+[1;37m[INFO]  Device 0 (90:E2:BA:CB:F5:44) is up: 10000 MBit/s[0m
+[1;37m[INFO]  [0;32m2 devices are up.[0m[0m
+[RX - dev]: { 0 } 
+[TX - dev]: { 1 } 
+Pkt size: 60
+TX rate: 100 rateq1: 100 rateq2: 100 rateq3: 100
+==========VVV=============
+RX: 0.21 (0.00) Mpps, 105 (0) Mbit/s | 3084066 pkts, 197380224 Bytes
+TX: 0.58 (0.01) Mpps, 299 (3) Mbit/s | 8791209 pkts, 562637376 Bytes
+==========V=============
+_____75\_____
+
+[1;33m[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.[0m
+[1;33m[WARN]  Install libjemalloc if you encounter out of memory errors.[0m
+[1;37m[INFO]  Initializing DPDK. This will take a few seconds...[0m
+EAL: Probing VFIO support...
+EAL: PCI device 0000:84:00.0 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+EAL: PCI device 0000:84:00.1 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+[1;37m[INFO]  Found 2 usable devices:[0m
+   Device 0: 90:E2:BA:CB:F5:44 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+   Device 1: 90:E2:BA:CB:F5:45 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+PMD: ixgbe_dev_link_status_print():  Port 1: Link Down
+PMD: ixgbe_dev_link_status_print(): Port 0: Link Up - speed 0 Mbps - half-duplex
+Valerio parser
+Filename: /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Error with file! /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Tot_rules: 1835
+Tcp: 1608 |Udp: 180 |Icmp: 47
+Valerio parser end
+[1;37m[INFO]  Waiting for devices to come up...[0m
+[1;37m[INFO]  Device 1 (90:E2:BA:CB:F5:45) is up: 10000 MBit/s[0m
+[1;37m[INFO]  Device 0 (90:E2:BA:CB:F5:44) is up: 10000 MBit/s[0m
+[1;37m[INFO]  [0;32m2 devices are up.[0m[0m
+[RX - dev]: { 0 } 
+[TX - dev]: { 1 } 
+Pkt size: 60
+TX rate: 75 rateq1: 75 rateq2: 75 rateq3: 75
+==========VVV=============
+RX: 0.21 (0.00) Mpps, 105 (0) Mbit/s | 3083761 pkts, 197360704 Bytes
+TX: 0.44 (0.01) Mpps, 224 (3) Mbit/s | 6594840 pkts, 422069760 Bytes
+==========V=============
+_____50\_____
+
+[1;33m[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.[0m
+[1;33m[WARN]  Install libjemalloc if you encounter out of memory errors.[0m
+[1;37m[INFO]  Initializing DPDK. This will take a few seconds...[0m
+EAL: Probing VFIO support...
+EAL: PCI device 0000:84:00.0 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+EAL: PCI device 0000:84:00.1 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+[1;37m[INFO]  Found 2 usable devices:[0m
+   Device 0: 90:E2:BA:CB:F5:44 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+   Device 1: 90:E2:BA:CB:F5:45 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+PMD: ixgbe_dev_link_status_print():  Port 1: Link Down
+PMD: ixgbe_dev_link_status_print(): Port 0: Link Up - speed 0 Mbps - half-duplex
+Valerio parser
+Filename: /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Error with file! /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Tot_rules: 1835
+Tcp: 1608 |Udp: 180 |Icmp: 47
+Valerio parser end
+[1;37m[INFO]  Waiting for devices to come up...[0m
+[1;37m[INFO]  Device 0 (90:E2:BA:CB:F5:44) is up: 10000 MBit/s[0m
+[1;37m[INFO]  Device 1 (90:E2:BA:CB:F5:45) is up: 10000 MBit/s[0m
+[1;37m[INFO]  [0;32m2 devices are up.[0m[0m
+[RX - dev]: { 0 } 
+[TX - dev]: { 1 } 
+Pkt size: 60
+TX rate: 50 rateq1: 50 rateq2: 50 rateq3: 50
+==========VVV=============
+RX: 0.21 (0.00) Mpps, 105 (0) Mbit/s | 3086000 pkts, 197504000 Bytes
+TX: 0.29 (0.00) Mpps, 149 (2) Mbit/s | 4397526 pkts, 281441664 Bytes
+==========V=============
+_____25\_____
+
+[1;33m[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.[0m
+[1;33m[WARN]  Install libjemalloc if you encounter out of memory errors.[0m
+[1;37m[INFO]  Initializing DPDK. This will take a few seconds...[0m
+EAL: Probing VFIO support...
+EAL: PCI device 0000:84:00.0 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+EAL: PCI device 0000:84:00.1 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+[1;37m[INFO]  Found 2 usable devices:[0m
+   Device 0: 90:E2:BA:CB:F5:44 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+   Device 1: 90:E2:BA:CB:F5:45 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+PMD: ixgbe_dev_link_status_print():  Port 1: Link Down
+PMD: ixgbe_dev_link_status_print(): Port 0: Link Up - speed 0 Mbps - half-duplex
+Valerio parser
+Filename: /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Error with file! /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Tot_rules: 1835
+Tcp: 1608 |Udp: 180 |Icmp: 47
+Valerio parser end
+[1;37m[INFO]  Waiting for devices to come up...[0m
+[1;37m[INFO]  Device 0 (90:E2:BA:CB:F5:44) is up: 10000 MBit/s[0m
+[1;37m[INFO]  Device 1 (90:E2:BA:CB:F5:45) is up: 10000 MBit/s[0m
+[1;37m[INFO]  [0;32m2 devices are up.[0m[0m
+[RX - dev]: { 0 } 
+[TX - dev]: { 1 } 
+Pkt size: 60
+TX rate: 25 rateq1: 25 rateq2: 25 rateq3: 25
+==========VVV=============
+RX: 0.15 (0.00) Mpps, 75 (0) Mbit/s | 2200401 pkts, 140825664 Bytes
+TX: 0.15 (0.00) Mpps, 75 (1) Mbit/s | 2200401 pkts, 140825664 Bytes
+==========V=============
+_____10\_____
+
+[1;33m[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.[0m
+[1;33m[WARN]  Install libjemalloc if you encounter out of memory errors.[0m
+[1;37m[INFO]  Initializing DPDK. This will take a few seconds...[0m
+EAL: Probing VFIO support...
+EAL: PCI device 0000:84:00.0 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+EAL: PCI device 0000:84:00.1 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+[1;37m[INFO]  Found 2 usable devices:[0m
+   Device 0: 90:E2:BA:CB:F5:44 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+   Device 1: 90:E2:BA:CB:F5:45 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+PMD: ixgbe_dev_link_status_print():  Port 1: Link Down
+PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
+Valerio parser
+Filename: /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Error with file! /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Tot_rules: 1835
+Tcp: 1608 |Udp: 180 |Icmp: 47
+Valerio parser end
+[1;37m[INFO]  Waiting for devices to come up...[0m
+[1;37m[INFO]  Device 1 (90:E2:BA:CB:F5:45) is up: 10000 MBit/s[0m
+[1;37m[INFO]  Device 0 (90:E2:BA:CB:F5:44) is up: 10000 MBit/s[0m
+[1;37m[INFO]  [0;32m2 devices are up.[0m[0m
+[RX - dev]: { 0 } 
+[TX - dev]: { 1 } 
+Pkt size: 60
+TX rate: 10 rateq1: 10 rateq2: 10 rateq3: 10
+==========VVV=============
+RX: 0.06 (0.00) Mpps, 30 (0) Mbit/s | 882063 pkts, 56452032 Bytes
+TX: 0.06 (0.00) Mpps, 30 (0) Mbit/s | 882063 pkts, 56452032 Bytes
+==========V=============
+_____4\_____
+
+[1;33m[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.[0m
+[1;33m[WARN]  Install libjemalloc if you encounter out of memory errors.[0m
+[1;37m[INFO]  Initializing DPDK. This will take a few seconds...[0m
+EAL: Probing VFIO support...
+EAL: PCI device 0000:84:00.0 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+EAL: PCI device 0000:84:00.1 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+[1;37m[INFO]  Found 2 usable devices:[0m
+   Device 0: 90:E2:BA:CB:F5:44 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+   Device 1: 90:E2:BA:CB:F5:45 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+PMD: ixgbe_dev_link_status_print():  Port 1: Link Down
+PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
+Valerio parser
+Filename: /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Error with file! /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Tot_rules: 1835
+Tcp: 1608 |Udp: 180 |Icmp: 47
+Valerio parser end
+[1;37m[INFO]  Waiting for devices to come up...[0m
+[1;37m[INFO]  Device 1 (90:E2:BA:CB:F5:45) is up: 10000 MBit/s[0m
+[1;37m[INFO]  Device 0 (90:E2:BA:CB:F5:44) is up: 10000 MBit/s[0m
+[1;37m[INFO]  [0;32m2 devices are up.[0m[0m
+[RX - dev]: { 0 } 
+[TX - dev]: { 1 } 
+Pkt size: 60
+TX rate: 4 rateq1: 4 rateq2: 4 rateq3: 4
+==========VVV=============
+RX: 0.13 (0.00) Mpps, 66 (0) Mbit/s | 1947645 pkts, 124649280 Bytes
+TX: 0.13 (0.00) Mpps, 66 (1) Mbit/s | 1947645 pkts, 124649280 Bytes
+==========V=============
+_____1\_____
+
+[1;33m[WARN]  malloc() allocates objects >= 1 MiB from LuaJIT memory space.[0m
+[1;33m[WARN]  Install libjemalloc if you encounter out of memory errors.[0m
+[1;37m[INFO]  Initializing DPDK. This will take a few seconds...[0m
+EAL: Probing VFIO support...
+EAL: PCI device 0000:84:00.0 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+EAL: PCI device 0000:84:00.1 on NUMA socket 1
+EAL:   probe driver: 8086:10fb net_ixgbe
+[1;37m[INFO]  Found 2 usable devices:[0m
+   Device 0: 90:E2:BA:CB:F5:44 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+   Device 1: 90:E2:BA:CB:F5:45 ([0;32mIntel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection[0m)
+PMD: ixgbe_dev_link_status_print():  Port 1: Link Down
+PMD: ixgbe_dev_link_status_print():  Port 0: Link Down
+Valerio parser
+Filename: /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Error with file! /home/valerio/Ruleset/trace_shot/2k_1/acl1_seed_5.rules_trace
+Tot_rules: 1835
+Tcp: 1608 |Udp: 180 |Icmp: 47
+Valerio parser end
+[1;37m[INFO]  Waiting for devices to come up...[0m
+[1;37m[INFO]  Device 0 (90:E2:BA:CB:F5:44) is up: 10000 MBit/s[0m
+[1;37m[INFO]  Device 1 (90:E2:BA:CB:F5:45) is up: 10000 MBit/s[0m
+[1;37m[INFO]  [0;32m2 devices are up.[0m[0m
+[RX - dev]: { 0 } 
+[TX - dev]: { 1 } 
+Pkt size: 60
+TX rate: 1 rateq1: 1 rateq2: 1 rateq3: 1
+==========VVV=============
+RX: 0.07 (0.00) Mpps, 38 (0) Mbit/s | 1124298 pkts, 71955072 Bytes
+TX: 0.07 (0.00) Mpps, 38 (0) Mbit/s | 1124298 pkts, 71955072 Bytes
+==========V=============
