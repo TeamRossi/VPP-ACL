@@ -10,8 +10,8 @@ vpp-bench: leo's link
 
 Requirement:
 
-** config.source
-** vpp_start-default.sh
+* config.source
+* vpp_start-default.sh
 
 vpp-acl_plugin: we have introduced a function in order to parse the Ruleset file and create an ACL; and we have introduced two different Elog structure in order to capture Classification Time and matched ACE_Index
 
