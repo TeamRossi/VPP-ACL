@@ -1,14 +1,14 @@
 #!/bin/bash
 
-VPPFIX="vpp2653"
+VPPFIX="vpp3653"
 dir=$1
-exp=$2
+seed=$2
 
 dt=$(date '+%d-%m_%H-%M');
 dts=$(date '+%d-%m');
 echo "$dt"
 
-for acl_rules in $RULESET/$dir/$exp*.rules;
+for acl_rules in $RULESET/$dir/$seed*.rules;
 do
 rfilename="${acl_rules##/*/}"
 tfilename=$rfilename\_trace
@@ -22,41 +22,41 @@ sudo killall vpp_main
 sleep 5
 
 echo "VPP START DEFAULT: $VPPFIX"
-sh $VAEXP/conf-acl.sh $VPPFIX $acl_rules
+sh $EXP_VPP/conf-acl.sh $VPPFIX $acl_rules
 sleep 2
 
-sh $VAEXP/xc.sh $VPPFIX
+sh $EXP_VPP/conf-xc.sh $VPPFIX
 
-cd $VAEXP/elog_parser
+cd $EXP_VPP/elog_parser
 pwd
 
 echo "ELOG clean"
 sh elog_clean.sh
 
-mkdir -p $VAEXP/results_$dts/$classe_exp\_$dir
-echo "\n" > $VAEXP/results_$dts/$classe_exp\_$dir/MG_$name_exp.out
+mkdir -p $EXP_RES/results_$dts/$classe_exp\_$dir
+echo "\n" > $EXP_RES/results_$dts/$classe_exp\_$dir/MG_$name_exp.out
 
 echo "MoonGen"
 echo "sudo $MOONGEN_PATH/build/MoonGen $MGSCR/tr_gen_timer.lua --dpdk-config=$CONFIG_DIR/dpdk-conf.lua 1 0 $RULESET/trace_shot/$dir/$tfilename > tmp.out"
 sudo $MOONGEN_PATH/build/MoonGen $MGSCR/tr_gen_timer.lua --dpdk-config=$CONFIG_DIR/dpdk-conf.lua 1 0 $RULESET/trace_shot/$dir/$tfilename > tmp.out
 
 cat tmp.out
-cat tmp.out >> $VAEXP/results_$dts/$classe_exp\_$dir/MG_$name_exp.out
+cat tmp.out >> $EXP_RES/results_$dts/$classe_exp\_$dir/MG_$name_exp.out
 rm tmp.out
 
 echo "ELOG dump"
 sh elog_clk.sh
 
 sed -n 10,20p clk_output_elog
-cat clk_output_elog > $VAEXP/results_$dts/$classe_exp\_$dir/Elog_$name_exp.out
-cat clk_output_elog >> $VAEXP/results_$dts/$classe_exp\_$dir/Elog_$exp.out
+cat clk_output_elog > $EXP_RES/results_$dts/$classe_exp\_$dir/Elog_$name_exp.out
+cat clk_output_elog >> $EXP_RES/results_$dts/$classe_exp\_$dir/Elog_$seed.out
 rm clk_output_elog 
-#mv clk_output_elog $VAEXP/results/$classe_exp/Elog_$name_exp.out
+#mv clk_output_elog $EXP_RES/results/$classe_exp/Elog_$name_exp.out
 
 cd -
 pwd
 
 done
 
-echo "mv $VAEXP/results_$dts/$classe_exp\_$dir $VAEXP/results_$dts/$classe_exp\_clk_$dt"
-mv $VAEXP/results_$dts/$classe_exp\_$dir $VAEXP/results_$dts/$classe_exp\_$dir\_clk_$dt
+echo "mv $EXP_RES/results_$dts/$classe_exp\_$dir $EXP_RES/results_$dts/$classe_exp\_clk_$dt"
+mv $EXP_RES/results_$dts/$classe_exp\_$dir $EXP_RES/results_$dts/$classe_exp\_$dir\_clk_$dt

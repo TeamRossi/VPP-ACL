@@ -47,11 +47,9 @@ export DEFAULTIP="99.99.99.99"
 export DEFAULTIP6="2211:2::ffff"
 
 # VPP
-#export VPP_ROOT=/usr/local/src/vpp
-export VPP_ROOT=/home/valerio/vpp1704/vpp
-#export VPP_ROOT=/home/valerio/vpp1801/vpp
+export VPP_ROOT=vpp1704/vpp
 export VPP_PLUGIN_PATH=$VPP_ROOT/build-root/install-vpp-native/vpp/lib64/vpp_api_test_plugins
-#export LD_LIBRARY_PATH=/home/valerio/vpp/build-root/install-vpp_debug-native/vpp/lib64
+
 # DPDK
 export RTE_SDK=/usr/local/src/dpdk-17.02
 export RTE_PKTGEN=/usr/local/src/pktgen-dpdk-pktgen-3.1.2
@@ -70,11 +68,11 @@ export BINS="$VPP_ROOT/build-root/install-vpp-native/vpp/bin"
 export PLUGS="$VPP_ROOT/build-root/install-vpp-native/vpp/lib64/vpp_plugins"
 export SFLAG="env PATH=$PATH:$BINS"
 
-##Vale exp
-export VAEXP="/home/valerio/vpp1704/vExp"
-export RULESET="/home/valerio/Ruleset"
-export MGSCR="/home/valerio/MoonGen_mine"
-
+##Added by Valerio, Experiment
+export EXP-VPP="VPP-ACL/Experiment"
+export EXP-RES="VPP-ACL/RAW-DATA"
+export RULESET="VPP-ACL/Ruleset"
+export MGSCR="VPP-ACL/MoonGen_parser"
 
 # Aliases
 #alias force-update-conf="svn export https://github.com/theleos88/vpp-bench/trunk/scripts --force $CONFIG_DIR && source $CONFIG_DIR/config.sh"

@@ -1,15 +1,35 @@
 #!/bin/bash
+path=$1
 
-mkdir elog_parsed
-echo " " > elog_parsed/acl1_$2\_tot.out
+echo "====== Parser Speed-Dataset ======="
+
+mkdir $path/elog_parsed_speed/
+
+for file in $path/*_speed_*/MG_acl1_0.out
+do
+tmp_class="${file%_1_speed_*}"
+class="${tmp_class#$path/*}"
+
+tmp_rate="${file#*MG_acl1_}"
+rate="${tmp_rate#.out*}"
+
+filepath="${file%MG_acl1_*}"
+
+echo "$file || $class || $rate"
+
+echo " " > $path/elog_parsed_speed/$class\_tot.out
+
+
 #for rate in 0 2500 2250 2100 2000 1750 1500 1250 1000 750 500 250 100 75 50 25 10 4 1;
 for rate in 0 2500 2250 2100 2000 1900 1750 1500 1250 1000 750 500 250 100 75 50 25 15 10 
 do
 
-echo $1/MG_acl1_$rate.out
+filefor=$filepath\MG_acl1_$rate.out
+
 #python ../parserPy.py $1/MG_acl1_$rate.out parsed/acl1_$rate\_parsed.out
-python parserPy.py $1/MG_acl1_$rate.out elog_parsed/tmp.out
+python parser_speed.py $filefor $path/elog_parsed_speed/tmp.out
 
-cat elog_parsed/tmp.out >> elog_parsed/acl1_$2\_tot.out
+cat $path/elog_parsed_speed/tmp.out >> $path/elog_parsed_speed/$class\_tot.out
 
+done
 done

@@ -177,7 +177,7 @@ function simple_forward_tcp(txQueue, rules, pkt_size)
 	local bufs = mem:bufArray()
 
 	local totalSent = 0
-	local timer = timer:new(15)
+	local timer = timer:new(25)
 	while (timer:running()) do
 		bufs:alloc(framesize)
 
@@ -235,7 +235,7 @@ function simple_forward_udp(txQueue, rules, pkt_size)
 	local bufs = mem:bufArray()
 
 	local totalSent = 0
-	local timer = timer:new(15)
+	local timer = timer:new(25)
 	while (timer:running()) do
 		bufs:alloc(framesize)
 
@@ -293,7 +293,7 @@ function simple_forward_icmp(txQueue, rules, pkt_size)
 	local bufs = mem:bufArray()
 
 	local totalSent = 0
-	local timer = timer:new(15)
+	local timer = timer:new(25)
 	while (timer:running()) do
 		bufs:alloc(framesize)
 

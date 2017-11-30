@@ -28,11 +28,11 @@ echo "VPP START DEFAULT: $VPPFIX"
 $CONFIG_DIR/vpp_start-default.sh $VPPFIX &
 sleep 22
 
-sh $VAEXP/conf-xc.sh $VPPFIX
+sh $EXP_VPP/conf-xc.sh $VPPFIX
 
 
-mkdir -p $VAEXP/results_$dts/$classe_exp\_$dir
-echo "\n" > $VAEXP/results_$dts/$classe_exp\_$dir/MG_$name_exp.out
+mkdir -p $EXP_RES/results_$dts/$classe_exp\_$dir
+echo "\n" > $EXP_RES/results_$dts/$classe_exp\_$dir/MG_$name_exp.out
 
 #for rate in 0 2500 2250 2100 2000 1750 1500 1250 1000 750 500 250 100 75 50 25 10 4 1;
 for rate in 0 2500 2250 2100 2000 1900 1750 1500 1250 1000 750 500 250 100 75 50 25 15 10
@@ -40,16 +40,16 @@ do
 
 
 echo "_____$rate\_____\n" 
-echo "_____$rate\_____\n" >> $VAEXP/results_$dts/$classe_exp\_$dir/MG_$name_exp.out 
-echo "_____$rate\_____\n" >> $VAEXP/results_$dts/$classe_exp\_$dir/MG_$exp\_$rate.out
+echo "_____$rate\_____\n" >> $EXP_RES/results_$dts/$classe_exp\_$dir/MG_$name_exp.out 
+echo "_____$rate\_____\n" >> $EXP_RES/results_$dts/$classe_exp\_$dir/MG_$exp\_$rate.out
 
 echo "MoonGen"
 echo "$RULESET/trace_shot/1k_1/$tfilename"
 sudo $MOONGEN_PATH/build/MoonGen $MGSCR/tr_gen_timer.lua --dpdk-config=$CONFIG_DIR/dpdk-conf.lua 1 0 $RULESET/trace_shot/$dir/$tfilename -r $rate >> tmp.out
 
 cat tmp.out
-cat tmp.out >> $VAEXP/results_$dts/$classe_exp\_$dir/MG_$name_exp.out 
-cat tmp.out >> $VAEXP/results_$dts/$classe_exp\_$dir/MG_$exp\_$rate.out
+cat tmp.out >> $EXP_RES/results_$dts/$classe_exp\_$dir/MG_$name_exp.out 
+cat tmp.out >> $EXP_RES/results_$dts/$classe_exp\_$dir/MG_$exp\_$rate.out
 rm tmp.out
 
 done
@@ -57,5 +57,5 @@ done
 
 done
 
-echo "mv $VAEXP/results_$dts/$classe_exp\_$dir $VAEXP/results_$dts/$classe_exp\_speed_$dt"
-mv $VAEXP/results_$dts/$classe_exp\_$dir $VAEXP/results_$dts/$classe_exp\_$dir\_speed_$dt
+echo "mv $EXP_RES/results_$dts/$classe_exp\_$dir $EXP_RES/results_$dts/$classe_exp\_speed_$dt"
+mv $EXP_RES/results_$dts/$classe_exp\_$dir $EXP_RES/results_$dts/$classe_exp\_$dir\_speed_$dt
