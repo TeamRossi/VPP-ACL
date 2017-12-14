@@ -19,3 +19,4 @@ plot_pps:
 plot_diff:
 	python plot-throughput-pkts.py $(xc_f) $(a_1k) $(a_2k) $(a_4k) $(a_8k) 
 	mv pkts.png $(path)/pkts-$(dt).png
+

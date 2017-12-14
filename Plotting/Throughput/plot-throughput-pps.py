@@ -12,24 +12,25 @@ def loader(readfile, l_container={}):
 	for line in readfile:
 	    count=0
 	    for s in line.split():
+                print(s +" "+str(cline))
 		element = []
 		if (count == 0):
 			mrx = mrx + float(s)
-			if cline > 4:
+			if cline == 4:
 				mrx = mrx / 5
 				element = l_container['RX']
 				element.append(float(mrx))
 				mrx=0
 		if (count == 1):
 			mtx = mtx + float(s)
-			if cline > 4:
+			if cline == 4:
 				mtx = mtx / 5
 				element = l_container['TX']
 				element.append(float(mtx))
 				mtx=0
 				cline = 0 
+                        else: cline=cline + 1
 		count=count+1
-	    cline=cline + 1
 
 	readfile.close
 
@@ -86,8 +87,10 @@ print(str(a1_line))
 print(str(a4_line))
 
 
+plt.style.use('valerio-slide')
 #fig = plt.figure()
 fig, ax = plt.subplots()
+
 
 ax.plot(xc_line['TX'], xc_line['RX'],  label="X-connect")
 ax.plot(a1_line['TX'], a1_line['RX'],  label="1k Ruleset-Trace")
@@ -99,10 +102,10 @@ ax.set_axisbelow(True)
 ax.yaxis.grid(color='gray', linestyle='dashed')
 
 # add some text for labels, title and axes ticks
-ax.set_xlim([0,0.7])
-ax.set_ylim([0,0.7])
-ax.set_xlabel('TX (Mpps/s)')
-ax.set_ylabel('RX (Mpps/s)')
+#ax.set_xlim([0,0.7])
+#ax.set_ylim([0,0.7])
+ax.set_xlabel('TX (Mpps)')
+ax.set_ylabel('RX (Mpps)')
 #ax.yaxis.set_ticks(acl_index.values())
 ax.set_title('Throughput')
 

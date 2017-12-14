@@ -62,8 +62,9 @@ acl_ct4 = []
 acl_ct4 = parsing(fr4)
 
 
+plt.style.use('valerio-slide')
 #fig = plt.figure()
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(12,9))
 
 data = [acl_ct1, acl_ct2, acl_ct3, acl_ct4]
 

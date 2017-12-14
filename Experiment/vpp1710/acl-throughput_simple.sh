@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VPPFIX="vpp4654"
+VPPFIX="vpp4561"
 dir=$1
 seed=$2
 
@@ -32,7 +32,7 @@ mkdir -p $EXP_RES/results_$dts/$classe_exp\_$dir
 echo "\n" > $EXP_RES/results_$dts/$classe_exp\_$dir/MG_$name_exp.out
 
 #for rate in 0 2500 2250 2100 2000 1900 1750 1500 1250 1000 750 500 250 100 75 50 25 15 10
-for rate in 0 6000 5000 4000 3500 2500 2250 2100 2000 1900 1750 1500 1250 1000 750 500 250 100 75 50 25 15 10
+for rate in 0 
 do
 
 echo "_____$rate\_____\n" 
@@ -54,3 +54,7 @@ done
 done
 echo "mv $EXP_RES/results_$dts/$classe_exp\_$dir $EXP_RES/results_$dts/$classe_exp\_speed_$dt"
 mv $EXP_RES/results_$dts/$classe_exp\_$dir $EXP_RES/results_$dts/$classe_exp\_$dir\_speed_$dt
+
+
+sudo killall vpp_main
+sudo rm /tmp/cli.sock

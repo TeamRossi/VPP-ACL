@@ -3,13 +3,16 @@ import sys
 import numpy
 
 rint=1000000
+frequency=2.6*1000
 
 def parsing(readfile, acl_ct = []):
 
 	acl_ct = []
 	for line in readfile:
 	    for s in line.split():
-		acl_ct.append(int(s))
+		clock_cycle = int(s)
+		microseconds = float(clock_cycle / frequency)
+		acl_ct.append(microseconds)
 
 	readfile.close
 	#acl = trimming(acl_ct, numpy.percentile(acl_ct,5), numpy.percentile(acl_ct,95))
@@ -65,11 +68,14 @@ print(str(len(acl_ct1))+ " " +str(len(acl_ct2))+ " " +str(len(acl_ct3))+ " " +st
 
 
 
+plt.style.use('valerio-slide')
 #fig = plt.figure()
 fig, ax = plt.subplots()
 
 data = (acl_ct1 + acl_ct2 + acl_ct3 + acl_ct4)
-binwidth=100
+#binwidth=0.04
+binwidth=0.1
+#binwidth=100
 bins_l=numpy.arange(min(data), max(data) + binwidth, binwidth)
 
 plt.hist(acl_ct1, bins=bins_l, label="1k ruleset")
@@ -80,13 +86,48 @@ plt.hist(acl_ct4, bins=bins_l, label="8k ruleset")
 
 # add some text for labels, title and axes ticks
 #ax.set_xticklabels(ax.get_xticklabels(),rotation=30)
-ax.set_xlim([0,60000])
-ax.set_xlabel('Clock cycle')
+#ax.set_xlim([0,60000])
+#ax.set_xlim([0,25])
+
+#plt.ticklabel_format(style='sci', axis='x', scilimits=(0,0))
+#ax.xaxis.major.formatter._useMathText = True
+ax.set_xlabel(u'${\mu}s$')
+
 ax.set_ylabel('Density')
-ax.set_title('Classification time')
+ax.set_title('VPP 17.10 - Classification time')
 
 handles, labels = ax.get_legend_handles_labels()
 ax.legend(handles[::-1], labels[::-1])
 
 plt.savefig('hist_1m.png')
 plt.show()
+
+
+print("=================================")
+print("Table:")
+data = [acl_ct1, acl_ct2, acl_ct3, acl_ct4]
+
+rows = ("Avg", "Std")
+columns = ("1K", "2K", "4K", "8K")
+
+data_t = [[numpy.mean(acl_ct1),numpy.mean(acl_ct2), numpy.mean(acl_ct3), numpy.mean(acl_ct4)], 
+	[numpy.std(acl_ct1),numpy.std(acl_ct2), numpy.std(acl_ct3), numpy.std(acl_ct4)]]
+
+fw = open("tmp.out", 'w')
+out_str="size:\t1K\t2K\t4K\t8K\n"
+print out_str
+fw.write(out_str)
+
+for j in range(len(rows)):
+	out_str = str(rows[j])+ ":\t"
+	#print str(rows[j-1])+ ": \t"
+	for i in range(len(columns)):
+		out_str = out_str + str(round(data_t[j][i],3)) + "\t"
+		#print str(data_t[j-1][i-1]) + " \t "
+	out_str = out_str + "\n"
+	#print "\n"
+	print out_str
+	fw.write(out_str)
+
+fw.close()
+

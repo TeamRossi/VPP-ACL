@@ -14,21 +14,21 @@ def loader(readfile, l_container={}):
 		element = []
 		if count == 2:
 			mrx = mrx + int(s)
-			if cline > 4:
+			if cline == 4:
 				mrx = mrx / 5
 				element = l_container['RX']
 				element.append(int(mrx))
 				mrx=0
 		if count == 3:
 			mtx = mtx + int(s)
-			if cline > 4:
+			if cline == 4:
 				mtx = mtx / 5
 				element = l_container['TX']
 				element.append(int(mtx))
 				mtx=0
 				cline = 0 
+                        else: cline=cline + 1
 		count=count+1
-	    cline=cline + 1
 
 	readfile.close
 

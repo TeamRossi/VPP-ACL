@@ -1,6 +1,5 @@
 #!/bin/bash
 
-VPPFIX="vpp6372"
 #dir=$1
 #exp=$2
 dir=1k_1
@@ -24,18 +23,18 @@ echo "Classe: $classe_exp || $name_exp"
 sudo killall vpp_main
 sleep 5
 
-echo "VPP START DEFAULT: $VPPFIX"
-$CONFIG_DIR/vpp_start-default.sh $VPPFIX &
-sleep 22
+echo "VPP START DEFAULT"
+$CONFIG_DIR/vpp_start-default.sh &
+sleep 25
 
-sh $EXP_VPP/conf-xc.sh $VPPFIX
+sh $EXP_VPP/conf-xc.sh 
 
 
 mkdir -p $EXP_RES/results_$dts/$classe_exp\_$dir
 echo "\n" > $EXP_RES/results_$dts/$classe_exp\_$dir/MG_$name_exp.out
 
-#for rate in 0 2500 2250 2100 2000 1750 1500 1250 1000 750 500 250 100 75 50 25 10 4 1;
-for rate in 0 2500 2250 2100 2000 1900 1750 1500 1250 1000 750 500 250 100 75 50 25 15 10
+#for rate in 0 2500 2250 2100 2000 1900 1750 1500 1250 1000 750 500 250 100 75 50 25 15 10
+for rate in 0 
 do
 
 
@@ -59,3 +58,9 @@ done
 
 echo "mv $EXP_RES/results_$dts/$classe_exp\_$dir $EXP_RES/results_$dts/$classe_exp\_speed_$dt"
 mv $EXP_RES/results_$dts/$classe_exp\_$dir $EXP_RES/results_$dts/$classe_exp\_$dir\_speed_$dt
+
+
+
+
+sudo killall vpp_main
+sudo rm /tmp/cli.sock

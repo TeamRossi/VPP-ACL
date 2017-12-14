@@ -49,6 +49,7 @@ try:
         f4 = str(sys.argv[4])
         f5 = str(sys.argv[5])
         f6 = str(sys.argv[6])
+        f7 = str(sys.argv[7])
 
         fr1 = open(f1, 'r')
         fr2 = open(f2, 'r')
@@ -56,6 +57,7 @@ try:
         fr4 = open(f4, 'r')
         fr5 = open(f5, 'r')
         fw = open(f6, 'w')
+        fw1 = open(f7, 'w')
 
 except IndexError:
 	print("Error: no Filename")
@@ -84,3 +86,23 @@ for a,b,c,d,e in zip(acl_ct1, acl_ct2,  acl_ct3, acl_ct4, acl_ct5):
     fw.write(str(a) + ' ' + str(b) + ' ' + str(c) + ' ' + str(d) + ' ' + str(e) + '\n')
 
 fw.close
+
+
+frequency=2.6*1000
+
+
+data_t = [numpy.mean(acl_ct1), numpy.mean(acl_ct2), numpy.mean(acl_ct3), numpy.mean(acl_ct4)]
+
+print(str(data_t))
+clock_cycle = numpy.mean(data_t)
+
+microseconds = float(clock_cycle / frequency)
+
+fw1.write("Clock " + str(clock_cycle) + '\n')
+fw1.write("us " + str(microseconds) + '\n')
+
+fw1.close
+
+
+
+
