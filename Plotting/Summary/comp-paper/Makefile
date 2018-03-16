@@ -20,21 +20,14 @@ plot_class_part:
 
 pathv1=/home/valerio/vpp1704/Results/Summary/
 pathv2=/home/valerio/vpp1710/Results/Summary/
-pathv3=/home/valerio/tm_vpp1710/Results/Summary/
 st1=$(pathv1)/Total.out
 stnr1=$(pathv2)/norange/Table_12-12_11-16/Total.out
 st2=$(pathv2)/Total.out
-st3=$(pathv3)/Total.out
 
 comp_vpp:
-	python comp-vpp-version.py $(st1) $(st2) $(st3)
+	python comp-vpp-version.py $(st1) $(st2)
 	mv pps1.png $(pathp)/comp_vpp_throughput-$(dt).png
 	mv pps2.png $(pathp)/comp_vpp_partition-$(dt).png
-
-comp_vpp_log:
-	python comp-vpp-version_log.py $(st1) $(st2) $(st3)
-	mv pps1.png $(pathp)/comp_vpp_throughput_log-$(dt).png
-	mv pps2.png $(pathp)/comp_vpp_partition_log-$(dt).png
 
 comp_norange:
 	python comp-norange.py $(stnr1) $(st2)

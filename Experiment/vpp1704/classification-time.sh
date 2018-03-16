@@ -1,6 +1,7 @@
 #!/bin/bash
 
-VPPFIX="vpp3653"
+VPPFIX=$3
+echo "$VPPFIX"
 dir=$1
 seed=$2
 
@@ -18,8 +19,6 @@ classe_exp="${rfilename%%\_*}"
 echo "Ruleset: $acl_rules || $rfilename  || $tfilename"
 echo "Classe: $classe_exp || $name_exp"
 
-sudo killall vpp_main
-sleep 5
 
 echo "VPP START DEFAULT: $VPPFIX"
 sh $EXP_VPP/conf-acl.sh $VPPFIX $acl_rules

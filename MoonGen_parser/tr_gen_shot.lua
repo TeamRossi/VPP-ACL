@@ -148,17 +148,6 @@ function simple_forward_tcp(txQueue, rules, pkt_size)
         local counter=1
 	local nrules=table.getn(rules)
 
-
-	print("Dentro task tcp!!")
-	for k,v in pairs(rules) do
-		io.write("line " .. k .. ": ")
-		for i,j in pairs(v) do
-			io.write(" " .. j)
-		end
-		io.write("\n")
-	end
-
-
 	local tcpPayloadLen = framesize - 14 - 20 - 20
 	local tcpPayload = ffi.new("uint8_t[?]", tcpPayloadLen)
 	for i = 0, tcpPayloadLen - 1 do

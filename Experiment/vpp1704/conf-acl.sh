@@ -4,7 +4,7 @@ sleep 5
 
 echo "VPP START DEFAULT: $1"
 $CONFIG_DIR/vpp_start-default.sh $1 &
-sleep 15
+sleep 20
 
 echo "Setting Up interfaces"
 sudo $SFLAG $BINS/vppctl -p $1 set int state TenGigabitEthernetb/0/1 up

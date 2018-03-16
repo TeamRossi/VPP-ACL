@@ -4,11 +4,11 @@ dts=$(date '+%d-%m');
 
 
 mkdir $EXP_RES/Summary/Table_$dt/
-mkdir $EXP_RES/Summary/tmp
 
 for seed in acl1 acl2 acl3 acl4 acl5
 do
 
+mkdir $EXP_RES/Summary/tmp
 echo "====$seed===="
 echo $seed >> $path/Table_$dt/Total.out 
 

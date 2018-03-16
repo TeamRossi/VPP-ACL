@@ -70,8 +70,8 @@ plt.style.use('valerio-slide')
 fig, ax = plt.subplots()
 
 data = (acl_ct1 + acl_ct2 + acl_ct3 + acl_ct4)
-binwidth=100
-binwidth=300
+binwidth=10
+#binwidth=300
 bins_l=numpy.arange(min(data), max(data) + binwidth, binwidth)
 
 plt.hist(acl_ct1, bins=bins_l, label="1k ruleset")
@@ -82,7 +82,7 @@ plt.hist(acl_ct4, bins=bins_l, label="8k ruleset")
 
 # add some text for labels, title and axes ticks
 #ax.set_xticklabels(ax.get_xticklabels(),rotation=30)
-ax.set_xlim([0,60000])
+#ax.set_xlim([0,60000])
 ax.set_xlabel('Clock cycle')
 ax.set_ylabel('Density')
 ax.set_title('Classification time')
@@ -91,7 +91,7 @@ handles, labels = ax.get_legend_handles_labels()
 ax.legend(handles[::-1], labels[::-1])
 
 plt.savefig('hist_1m.png')
-plt.show()
+#plt.show()
 
 
 print("=================================")

@@ -47,7 +47,7 @@ mkdir $EXP_RES/Summary/Throughput_$dt/
 for file in $path/elog_parsed_speed/*_1k_tot.out
 do
 
-filename="${file#*_speed/}"
+filename="${file##*_speed/}"
 seed="${filename%_1k_*}"
 
 

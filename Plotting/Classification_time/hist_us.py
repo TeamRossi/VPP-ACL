@@ -73,8 +73,9 @@ plt.style.use('valerio-slide')
 fig, ax = plt.subplots()
 
 data = (acl_ct1 + acl_ct2 + acl_ct3 + acl_ct4)
-#binwidth=0.04
-binwidth=0.1
+binwidth=0.04
+#binwidth=0.001
+#binwidth=0.1
 #binwidth=100
 bins_l=numpy.arange(min(data), max(data) + binwidth, binwidth)
 
@@ -94,13 +95,13 @@ plt.hist(acl_ct4, bins=bins_l, label="8k ruleset")
 ax.set_xlabel(u'${\mu}s$')
 
 ax.set_ylabel('Density')
-ax.set_title('VPP 17.10 - Classification time')
+ax.set_title('VPP 17.10 - TM - Classification time')
 
 handles, labels = ax.get_legend_handles_labels()
 ax.legend(handles[::-1], labels[::-1])
 
 plt.savefig('hist_1m.png')
-plt.show()
+#plt.show()
 
 
 print("=================================")

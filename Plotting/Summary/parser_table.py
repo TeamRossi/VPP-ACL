@@ -53,11 +53,11 @@ def loader_class(readfile, l_container={}):
 			if isinstance(float(s), numbers.Real):
 				if cline == 0:
 					element = l_container['clock']
-					element.append(round(float(s)))
+					element.append(round(float(s),3))
 					cline = cline + 1
 				elif cline == 1:
 					element = l_container['us']
-					element.append(round(float(s)))
+					element.append(round(float(s),3))
 					cline = 0 
 		except ValueError: count = count
 

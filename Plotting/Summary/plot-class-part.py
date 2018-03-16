@@ -122,7 +122,7 @@ print(str(seed1_line))
 plt.style.use('valerio-slide')
 #fig = plt.figure()
 fig1, ax = plt.subplots(figsize=(14, 8))
-ax.set_title('VPP 17.10 - Classification Time (@10Gbps)')
+ax.set_title('VPP 17.10 - TM - Classification Time (@10Gbps)')
 
 ax.plot(x1a, seed1a, '--', label='ACL_1')
 ax.plot(x2a, seed2a, '--', label='ACL_2')
@@ -143,7 +143,7 @@ handles, labels = ax.get_legend_handles_labels()
 ax.legend(handles[::-1], labels[::-1])
 
 fig2, ax2 = plt.subplots(figsize=(14, 8))
-ax2.set_title('VPP 17.10')
+ax2.set_title('VPP 17.10 - TM')
 
 ax2.plot(x1b, seed1b, '--', label='ACL_1')
 ax2.plot(x2b, seed2b, '--', label='ACL_2')
