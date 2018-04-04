@@ -123,6 +123,7 @@ print(str(file2_line))
 print(str(file3_line))
 
 sizes = ['1','10','100','500','1K','2K','4K','8K','16K','32K']
+sizes = ['1','10','100','500','1K','2K','4K','8K','16K','32K','64k']
 
 fw.write("Size:\t") 
 for i in sizes:

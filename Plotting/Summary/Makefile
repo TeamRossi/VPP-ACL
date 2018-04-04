@@ -1,43 +1,28 @@
-path=$(EXP_RES)/Summary
-pathp=$(EXP_RES)/Pictures
-
-s1=$(path)/acl1_table.out
-s2=$(path)/acl2_table.out
-s3=$(path)/acl3_table.out
-s4=$(path)/acl4_table.out
-s5=$(path)/acl5_table.out
+pathp=Pictures
 
 dt=$(shell date '+%d-%m_%H-%M')
 
-plot_sum:
-	python plot-throughput.py $(s1) $(s2) $(s3) $(s4) $(s5) 
-	mv pps.png $(pathp)/sum_throughput-$(dt).png
-
-plot_class_part:
-	python plot-class-part.py $(s1) $(s2) $(s3) $(s4) $(s5) 
-	mv pps1.png $(pathp)/sum_class-$(dt).png
-	mv pps2.png $(pathp)/sum_part-$(dt).png
-
-pathv1=/home/valerio/vpp1704/Results/Summary/
-pathv2=/home/valerio/vpp1710/Results/Summary/
-pathv3=/home/valerio/tm_vpp1710/Results/Summary/
-st1=$(pathv1)/Total.out
-stnr1=$(pathv2)/norange/Table_12-12_11-16/Total.out
-st2=$(pathv2)/Total.out
-st3=$(pathv3)/Total.out
-
 comp_vpp:
-	python comp-vpp-version.py $(st1) $(st2) $(st3)
+	python general-11.py file_info/script-thr-part.info file_info/compare-vpps.info
 	mv pps1.png $(pathp)/comp_vpp_throughput-$(dt).png
 	mv pps2.png $(pathp)/comp_vpp_partition-$(dt).png
 
-comp_vpp_log:
-	python comp-vpp-version_log.py $(st1) $(st2) $(st3)
-	mv pps1.png $(pathp)/comp_vpp_throughput_log-$(dt).png
-	mv pps2.png $(pathp)/comp_vpp_partition_log-$(dt).png
+comp_vpp2:
+	python general-11.py file_info/script-class-part.info file_info/compare-vpps.info
+	mv pps1.png $(pathp)/comp_vpp_classification-$(dt).png
+	mv pps2.png $(pathp)/comp_vpp_partition-$(dt).png
 
-comp_norange:
-	python comp-norange.py $(stnr1) $(st2)
-	mv pps1.png $(pathp)/comp_nr_throughput-$(dt).png
-	mv pps2.png $(pathp)/comp_nr_partition-$(dt).png
+comp_paper:
+	python general-11.py file_info/script-class-part.info file_info/compare-papers.info
+	mv pps1.png $(pathp)/comp_paper_classification-$(dt).png
+	mv pps2.png $(pathp)/comp_paper_partition_log-$(dt).png
 
+comp_tm:
+	python general-11.py file_info/script-class-part.info file_info/compare-tm.info
+	mv pps1.png $(pathp)/comp_tm_classification-$(dt).png
+	mv pps2.png $(pathp)/comp_tm_partition_log-$(dt).png
+
+comp_tot:
+	python general-11.py file_info/script-class-part.info file_info/compare-tot1.info
+	mv pps1.png $(pathp)/comp_tot_classification-$(dt).png
+	mv pps2.png $(pathp)/comp_tot_partition_log-$(dt).png

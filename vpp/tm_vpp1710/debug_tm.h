@@ -15,8 +15,8 @@
  *------------------------------------------------------------------
  */
 
-#ifndef _ACL_LINEAR_LOOKUP_H_
-#define _ACL_LINEAR_LOOKUP_H_
+#ifndef _ACL_DEBUG_TM_H_
+#define _ACL_DEBUG_TM_H_
 
 
 #include <stddef.h>

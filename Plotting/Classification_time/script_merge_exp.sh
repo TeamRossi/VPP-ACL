@@ -8,7 +8,7 @@ echo "=======MergePerExp========="
 mkdir $path/elog_parsed_clk/
 mkdir $EXP_RES/Summary/Classification_$dt/
 
-for size in 1 10 100 500 1k 2k 4k 8k 16k 32k
+for size in 1 10 100 500 1k 2k 4k 8k 16k 32k 64k
 do
 for file in $path/*_$size\_1_clk_*/Elog_*_seed_1.out
 do

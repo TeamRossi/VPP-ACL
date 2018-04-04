@@ -30,7 +30,6 @@
 #include <acl/acl.h>
 #include <vppinfra/bihash_48_8.h>
 
-#include "linear_lookup.h"
 #include "hash_lookup.h"
 #include "hash_lookup_private.h"
 
@@ -1002,7 +1001,15 @@ show_hash_acl_hash (vlib_main_t * vm, acl_main_t *am, u32 verbose)
 /*==================================================================*/
 /* TupleMerge section # Valerio */
 /*==================================================================*/
-/*==================================================================*/
+/*
+Code adapted by Valerio Bruschi (valerio.bruschi@telecom-paristech.fr) 
+and based on the TupleMerge [1] simulator kindly made available 
+(at URL, if any) by  James Daly (dalyjamese@gmail.com) 
+and  Eric Torng (torng@cse.msu.edu)
+
+[1] James Daly, Eric Torng "TupleMerge: Building Online Packet Classifiers 
+by Omitting Bits", In Proc. IEEE ICCCN 2017, pp. 1-10
+*/
 /*==================================================================*/
 
 int
@@ -1190,11 +1197,11 @@ tm_remake_mask_type_order_pool(acl_main_t *am,
                             applied_hash_ace_entry_t **applied_hash_aces,
                             u32 sw_if_index, u8 is_input){
 
-	//make pool for sw_if_index, is_input
   hash_applied_mask_info_t *new_hash_applied_mask_pool = vec_new(hash_applied_mask_info_t,0);
 
   DBG( "remake mask type" ); 
 
+  hash_applied_mask_info_t *minfo; 
   for(int i=0; i < vec_len((*applied_hash_aces)); i++) {
     applied_hash_ace_entry_t *pae = vec_elt_at_index((*applied_hash_aces), i);
 
@@ -1204,38 +1211,41 @@ tm_remake_mask_type_order_pool(acl_main_t *am,
     //search in order pool if mask_type_index is already there
     int search;
     for (search=0; search < vec_len(new_hash_applied_mask_pool); search++){
-	    if(new_hash_applied_mask_pool[search].mask_type_index == pae->mask_type_index)
+	    minfo = vec_elt_at_index(new_hash_applied_mask_pool, search);
+	    if(minfo->mask_type_index == pae->mask_type_index)
 		    break;
     }
 
+    vec_validate((new_hash_applied_mask_pool), search);
+    minfo = vec_elt_at_index((new_hash_applied_mask_pool), search);
     if(search == new_pointer){
 	    //vlib_cli_output(&vlib_global_main, "search: %d, index: %d", search, pae->mask_type_index); 
-	    vec_validate(new_hash_applied_mask_pool, new_pointer);
-	    new_hash_applied_mask_pool[search].mask_type_index = pae->mask_type_index;
-	    new_hash_applied_mask_pool[search].num_entries = 0;
-	    new_hash_applied_mask_pool[search].max_collisions = 0;
-	    new_hash_applied_mask_pool[search].max_priority = ~0;
+	    minfo->mask_type_index = pae->mask_type_index;
+	    minfo->num_entries = 0;
+	    minfo->max_collisions = 0;
+	    minfo->max_priority = ~0;
     }
 
-    vec_validate(new_hash_applied_mask_pool, search);
-    new_hash_applied_mask_pool[search].num_entries = new_hash_applied_mask_pool[search].num_entries + 1;
+    minfo->num_entries = minfo->num_entries + 1;
 
-    if (pae->collision > new_hash_applied_mask_pool[search].max_collisions)
-	    new_hash_applied_mask_pool[search].max_collisions = pae->collision; 
+    if (pae->collision > minfo->max_collisions)
+	    minfo->max_collisions = pae->collision; 
 
-    if((new_hash_applied_mask_pool[search].max_priority > (new_index+1) ) | (new_hash_applied_mask_pool[search].max_priority == 0))
-	    new_hash_applied_mask_pool[search].max_priority = (new_index+1);
+    if((minfo->max_priority > (new_index+1) ) | (minfo->max_priority == 0))
+	    minfo->max_priority = (new_index+1);
 
   }
 
-  vec_free(am->hash_applied_mask_pool);
-  am->hash_applied_mask_pool = new_hash_applied_mask_pool;
+  hash_applied_mask_info_t **hash_applied_mask_pool = is_input ? vec_elt_at_index(am->input_hash_applied_mask_pool_by_sw_if_index, sw_if_index) :
+	    vec_elt_at_index(am->output_hash_applied_mask_pool_by_sw_if_index,  sw_if_index);
 
+  vec_free((*hash_applied_mask_pool));
+  (*hash_applied_mask_pool) = vec_dup(new_hash_applied_mask_pool);
 }
 
 
 static u32
-tm_assign_mask_type_index(acl_main_t *am, fa_5tuple_t *mask, u32 sw_if_index, applied_hash_acl_info_t **applied_hash_acls)
+tm_assign_mask_type_index(acl_main_t *am, fa_5tuple_t *mask, u32 sw_if_index, u8 is_input, applied_hash_acl_info_t **applied_hash_acls)
 {
 	DBG( "TM-assigning mask type index");
 	//print_mask(mask);
@@ -1265,12 +1275,16 @@ tm_assign_mask_type_index(acl_main_t *am, fa_5tuple_t *mask, u32 sw_if_index, ap
 		pool_get_aligned (am->ace_mask_type_pool, mte, CLIB_CACHE_LINE_BYTES);
 		mask_type_index = mte - am->ace_mask_type_pool;
 
-		int search = vec_len(am->hash_applied_mask_pool);
-		vec_validate(am->hash_applied_mask_pool, search);
-		am->hash_applied_mask_pool[search].mask_type_index = mask_type_index;
-		am->hash_applied_mask_pool[search].num_entries = 0;
-		am->hash_applied_mask_pool[search].max_collisions = 0;
-		am->hash_applied_mask_pool[search].max_priority = ~0;
+		hash_applied_mask_info_t **hash_applied_mask_pool = is_input ? vec_elt_at_index(am->input_hash_applied_mask_pool_by_sw_if_index, sw_if_index) :
+			vec_elt_at_index(am->output_hash_applied_mask_pool_by_sw_if_index,  sw_if_index);
+
+		int spot = vec_len((*hash_applied_mask_pool));
+		vec_validate((*hash_applied_mask_pool), spot);
+		hash_applied_mask_info_t *minfo = vec_elt_at_index((*hash_applied_mask_pool), spot);
+		minfo->mask_type_index = mask_type_index;
+		minfo->num_entries = 0;
+		minfo->max_collisions = 0;
+		minfo->max_priority = ~0;
 
 		clib_memcpy(&mte->mask, mask, sizeof(mte->mask));
 		relax_tuple(&mte->mask);
@@ -1314,7 +1328,7 @@ tm_fill_applied_hash_ace_kv(acl_main_t *am,
 	  /* start taking base_mask associated to ace, and look if it is comparable with already existing masks */
 	  mte = vec_elt_at_index(am->ace_mask_type_pool, ace_info->base_mask_type_index);
 	  mask = &mte->mask; 
-	  pae->mask_type_index = tm_assign_mask_type_index(am, mask, sw_if_index, applied_hash_acls);
+	  pae->mask_type_index = tm_assign_mask_type_index(am, mask, sw_if_index, is_input, applied_hash_acls);
   }
 
 //aggiungere if is_base da poter utilizzare la funzione durante il lookup?
@@ -1459,7 +1473,6 @@ split_partition(acl_main_t *am, u32 first_index,
                             u32 sw_if_index, u8 is_input,
 			    applied_hash_ace_entry_t **applied_hash_aces){
 
-	vlib_main_t *vm = &vlib_global_main;
 	DBG( "TM-split_partition - first_entry:%d", first_index);
 	ace_mask_type_entry_t *mte;
 	fa_5tuple_t *min_tuple = malloc(sizeof(fa_5tuple_t));
@@ -1582,24 +1595,31 @@ split_partition(acl_main_t *am, u32 first_index,
         u32 new_mask_type_index = assign_mask_type_index(am, min_tuple);
 
 
+	hash_applied_mask_info_t **hash_applied_mask_pool = is_input ? vec_elt_at_index(am->input_hash_applied_mask_pool_by_sw_if_index, sw_if_index) :
+	    vec_elt_at_index(am->output_hash_applied_mask_pool_by_sw_if_index,  sw_if_index);
+
+	hash_applied_mask_info_t *minfo; 
 	//search in order pool if mask_type_index is already there
 	int search;
-	for (search=0; search < vec_len(am->hash_applied_mask_pool); search++){
-		if(am->hash_applied_mask_pool[search].mask_type_index == new_mask_type_index)
+	for (search=0; search < vec_len((*hash_applied_mask_pool)); search++){
+		minfo = vec_elt_at_index((*hash_applied_mask_pool), search);
+		if(minfo->mask_type_index == new_mask_type_index)
 			break;
 	}
 
-	vec_validate(am->hash_applied_mask_pool, search);
-	am->hash_applied_mask_pool[search].mask_type_index = new_mask_type_index;
-	am->hash_applied_mask_pool[search].num_entries = 0;
-	am->hash_applied_mask_pool[search].max_collisions = 0;
-	am->hash_applied_mask_pool[search].max_priority = ~0;
+
+	vec_validate((*hash_applied_mask_pool), search);
+	minfo = vec_elt_at_index((*hash_applied_mask_pool), search);
+	minfo->mask_type_index = new_mask_type_index;
+	minfo->num_entries = 0;
+	minfo->max_collisions = 0;
+	minfo->max_priority = ~0;
 
 
 	DBG( "TM-split_partition - mask type index-assigned!! -> %d", new_mask_type_index);
 
 	if(coll_mask_type_index == new_mask_type_index){
-		vlib_cli_output(vm, "TM-There are collisions over threshold, but i'm not able to split! %d %d", coll_mask_type_index, new_mask_type_index);
+		//vlib_cli_output(vm, "TM-There are collisions over threshold, but i'm not able to split! %d %d", coll_mask_type_index, new_mask_type_index);
 		return;
 	}
 
@@ -1633,7 +1653,7 @@ split_partition(acl_main_t *am, u32 first_index,
 		/* insert the new entry */
 		pop_pae->mask_type_index = new_mask_type_index;
 
-		//crea loop, attenzione!!! anche se differente entry(?)
+		//is_new avoid looping!
 		tm_activate_applied_ace_hash_entry(am, sw_if_index, is_input, applied_hash_aces, r_ace_index, 0);
 
 		r_ace_index = next_index;
@@ -1732,8 +1752,10 @@ tm_hash_acl_apply(acl_main_t *am, u32 sw_if_index, u8 is_input, int acl_index)
   void *oldheap = hash_acl_set_heap(am);
   if (is_input) {
     vec_validate(am->input_hash_entry_vec_by_sw_if_index, sw_if_index);
+    vec_validate(am->input_hash_applied_mask_pool_by_sw_if_index, sw_if_index);
   } else {
     vec_validate(am->output_hash_entry_vec_by_sw_if_index, sw_if_index);
+    vec_validate(am->output_hash_applied_mask_pool_by_sw_if_index, sw_if_index);
   }
   vec_validate(am->hash_acl_infos, acl_index);
   applied_hash_ace_entry_t **applied_hash_aces = get_applied_hash_aces(am, is_input, sw_if_index);
@@ -1814,6 +1836,7 @@ tm_hash_acl_apply(acl_main_t *am, u32 sw_if_index, u8 is_input, int acl_index)
   DBG( "TM-APPLY-resetting bitmap");
   tm_remake_mask_type_order_pool(am, applied_hash_aces, sw_if_index, is_input);
   //applied_hash_entries_analyze(am, applied_hash_aces);
+
 done:
   clib_mem_set_heap (oldheap);
   DBG( "TM-APPLY-end");
@@ -1952,7 +1975,7 @@ tm_multi_acl_match_get_applied_ace_index(acl_main_t *am, fa_5tuple_t *match)
   u64 *pmask;
   u64 *pkey;
   int mask_type_index, order_index;
-  u32 curr_match_index = ~0;
+  u32 curr_match_index = (~0 -1);
 
 
 //Added by Valerio
@@ -1968,25 +1991,27 @@ tm_multi_acl_match_get_applied_ace_index(acl_main_t *am, fa_5tuple_t *match)
   u32 sw_if_index = match->pkt.sw_if_index;
   u8 is_input = match->pkt.is_input;
   applied_hash_ace_entry_t **applied_hash_aces = get_applied_hash_aces(am, is_input, sw_if_index);
-  applied_hash_acl_info_t **applied_hash_acls = is_input ? &am->input_applied_hash_acl_info_by_sw_if_index :
-                                                    &am->output_applied_hash_acl_info_by_sw_if_index;
+
+  hash_applied_mask_info_t **hash_applied_mask_pool = is_input ? vec_elt_at_index(am->input_hash_applied_mask_pool_by_sw_if_index, sw_if_index) :
+	    vec_elt_at_index(am->output_hash_applied_mask_pool_by_sw_if_index,  sw_if_index);
+
+  hash_applied_mask_info_t *minfo;
 
   DBG("TRYING TO MATCH: %016llx %016llx %016llx %016llx %016llx %016llx",
 	       pmatch[0], pmatch[1], pmatch[2], pmatch[3], pmatch[4], pmatch[5]);
 
-  applied_hash_acl_info_t *pal = vec_elt_at_index((*applied_hash_acls), sw_if_index);
   //for(mask_type_index=0; mask_type_index < pool_len(am->ace_mask_type_pool); mask_type_index++) {
-  for(order_index = 0; order_index < pool_len(am->hash_applied_mask_pool); order_index++) {
-	  mask_type_index = am->hash_applied_mask_pool[order_index].mask_type_index; 
+  for(order_index = 0; order_index < vec_len((*hash_applied_mask_pool)); order_index++) {
 
-    if (!clib_bitmap_get(pal->mask_type_index_bitmap, mask_type_index)) {
-      /* This bit is not set. Avoid trying to match */
-      continue;
-    }
-    if (am->hash_applied_mask_pool[order_index].max_priority > (curr_match_index+1)) {
+    //minfo = am->hash_applied_mask_pool[order_index]; 
+    minfo = vec_elt_at_index((*hash_applied_mask_pool), order_index); 
+
+    if (minfo->max_priority > (curr_match_index+1)) {
       /* Index in this partition are greater than our candidate, Avoid trying to match! */
       continue;
     }
+
+    mask_type_index = minfo->mask_type_index; 
     ace_mask_type_entry_t *mte = vec_elt_at_index(am->ace_mask_type_pool, mask_type_index);
     pmatch = (u64 *)match;
     pmask = (u64 *)&mte->mask;

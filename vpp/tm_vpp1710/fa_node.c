@@ -1219,7 +1219,7 @@ acl_fa_node_fn (vlib_main_t * vm,
     .format_args = "i4i8",
   };
   struct {u32 vector_size; u64 clock_cycles;} *ed;
-  ed = ELOG_DATA (&vm->elog_main, e);
+  ed = ELOG_DATA (&vlib_global_main.elog_main, e);
   ed->vector_size = n_frame_elog;
   ed->clock_cycles = clk_l - clk_f;
 

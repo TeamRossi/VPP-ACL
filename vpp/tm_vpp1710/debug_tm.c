@@ -76,6 +76,10 @@ acl_describe_partition (vlib_main_t * vm,
 	    return error = clib_error_return(0, "missing interface name / explicit sw_if_index number \n");
     }
 
+    hash_applied_mask_info_t **hash_applied_mask_pool = is_input ? vec_elt_at_index(sm->input_hash_applied_mask_pool_by_sw_if_index, sw_if_index) :
+	    vec_elt_at_index(sm->output_hash_applied_mask_pool_by_sw_if_index,  sw_if_index);
+
+
     ace_mask_type_entry_t *mte;
 
     u32 order_index=0;
@@ -83,18 +87,18 @@ acl_describe_partition (vlib_main_t * vm,
     u32 mask_type_index=0;
     vlib_cli_output(vm, "mask type: 'id' (best_priority) - max collisions hosted, number of entries");
 
-    for(order_index = 0; order_index < pool_len(sm->hash_applied_mask_pool); order_index++) {
-	    mask_type_index = sm->hash_applied_mask_pool[order_index].mask_type_index;
+    for(order_index = 0; order_index < pool_len((*hash_applied_mask_pool)); order_index++) {
+	    hash_applied_mask_info_t *minfo = vec_elt_at_index((*hash_applied_mask_pool), order_index);
+	    mask_type_index = minfo->mask_type_index;
 
 	    mte = vec_elt_at_index(sm->ace_mask_type_pool, mask_type_index);
-	    priority = sm->hash_applied_mask_pool[order_index].max_priority;
+	    priority = minfo->max_priority;
 
-	    vlib_cli_output(vm, "Mask type: %d (%d)", mask_type_index, priority);
-
-	    u32 max_collisions = sm->hash_applied_mask_pool[order_index].max_collisions;
-	    u32 num_entries = sm->hash_applied_mask_pool[order_index].num_entries;
+	    u32 max_collisions = minfo->max_collisions;
+	    u32 num_entries = minfo->num_entries;
 
 	    if(verbose){
+		    vlib_cli_output(vm, "Mask type: %d (%d)", mask_type_index, priority);
 		    print_mask(&mte->mask);
 	    }
 

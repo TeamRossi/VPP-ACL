@@ -53,7 +53,7 @@
 
 #include "fa_node.h"
 #include "hash_lookup.h"
-#include "linear_lookup.h"
+#include "debug_tm.h"
 
 
 
@@ -3022,11 +3022,8 @@ cli_acl_show_partition_v (vlib_main_t * vm,
                                    vlib_cli_command_t * cmd){
 
     clib_error_t *error = 0;
-    acl_main_t * am = &acl_main;
+    acl_main_t *am = &acl_main;
     u32 sw_if_index = ~0;
-    u32 acl_index = ~0;
-    u32 *inacls = 0;
-    u32 *outacls = 0;
     u8 is_input = 0;
     u8 verbose = 0;
 
@@ -3035,15 +3032,6 @@ cli_acl_show_partition_v (vlib_main_t * vm,
     /* Parse args required to build the message */
     while (unformat_check_input (i) != UNFORMAT_END_OF_INPUT) {
         if (unformat (i, "sw_if_index %d", &sw_if_index))
-            ;
-        else if (unformat (i, "%d", &acl_index))
-          {
-            if(is_input)
-              vec_add1(inacls, htonl(acl_index));
-            else
-              vec_add1(outacls, htonl(acl_index));
-          }
-        else if (unformat (i, "acl %d", &acl_index))
             ;
         else if (unformat (i, "input"))
             is_input = 1;
@@ -3060,18 +3048,28 @@ cli_acl_show_partition_v (vlib_main_t * vm,
     }
 
 
+    hash_applied_mask_info_t **hash_applied_mask_pool = is_input ? vec_elt_at_index(am->input_hash_applied_mask_pool_by_sw_if_index, sw_if_index) :
+	    vec_elt_at_index(am->output_hash_applied_mask_pool_by_sw_if_index,  sw_if_index);
+
     int mask_type_index, order_index;
     int mask_type_counted = 0;
     u32 priority;
 
-    vlib_cli_output(vm, "mask type: 'id' (best_priority)");
-    for(order_index = 0; order_index < pool_len(am->hash_applied_mask_pool); order_index++) {
-            mask_type_index = am->hash_applied_mask_pool[order_index].mask_type_index;
+    if(verbose){
+	    vlib_cli_output(vm, "mask type: 'id' (best_priority)");
+    }
 
-            priority = am->hash_applied_mask_pool[order_index].max_priority;
+    for(order_index = 0; order_index < pool_len((*hash_applied_mask_pool)); order_index++) {
+	    hash_applied_mask_info_t *minfo = vec_elt_at_index((*hash_applied_mask_pool), order_index);
+
+	    mask_type_index = minfo->mask_type_index;
+
+	    priority = minfo->max_priority;
 
 	    mask_type_counted++;
-	    vlib_cli_output(vm, "Mask type: %d (%d)", mask_type_index, priority);
+	    if(verbose){
+		    vlib_cli_output(vm, "Mask type: %d (%d)", mask_type_index, priority);
+	    }
     }
 
     if(verbose){

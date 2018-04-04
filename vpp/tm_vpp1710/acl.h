@@ -171,7 +171,10 @@ typedef struct {
 
   /* a pool of all mask types present in all ACEs */
   ace_mask_type_entry_t *ace_mask_type_pool;
-  hash_applied_mask_info_t *hash_applied_mask_pool;
+
+  /* a pool of all mask types present in ACEs contained in each sw_if_index */
+  hash_applied_mask_info_t **input_hash_applied_mask_pool_by_sw_if_index;
+  hash_applied_mask_info_t **output_hash_applied_mask_pool_by_sw_if_index;
 
   /*
    * Classify tables used to grab the packets for the ACL check,
