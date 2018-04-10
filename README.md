@@ -1,5 +1,5 @@
 # VPP-ACL
-Initial git to share non-VPP code but useful tools for VPP-ACL related performance evaluation
+Repository to share non-VPP framework but useful tools for VPP-ACL related to performance evaluation
 
 
 # Requirement
@@ -13,7 +13,10 @@ Requirement:
 * config.source: in which there are the environment variables used to configure VPP.
 * vpp_start-default.sh: it is a script used to start VPP with a default configuration.
 
-vpp-acl_plugin: we have introduced few functions in order to parse the Ruleset file and create an ACL; and we have introduced two different Elog structure in order to capture Classification Time and matched ACE_Index. So, in this directory there are only the modified file of the ones present in [VPP/STABLE/1704](https://docs.fd.io/vpp/17.04/release_notes_1704.html)
+vpp-acl_plugin: we have introduced few functions in order to parse the Ruleset file and create an ACL; and we have introduced two different Elog structure in order to capture Classification Time and matched ACE_Index. So, in this directory there are only the modified file of the ones present in 
+* [VPP/STABLE/1704](https://docs.fd.io/vpp/17.04/release_notes_1704.html)
+* [VPP/STABLE/1710](https://docs.fd.io/vpp/17.10/release_notes_1710.html)
+* [Our contribution](https://github.com/TeamRossi/VPP-ACL/tree/master/vpp/tm_vpp1710)
 
 ## [Moongen](http://scholzd.github.io/MoonGen/)
 

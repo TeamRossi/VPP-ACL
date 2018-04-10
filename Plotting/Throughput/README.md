@@ -24,17 +24,5 @@ This script will creat a directory (elog_parsed_speed), in the path in input, in
 E.g. all files in the directory `acl1_1k_1_speed_21-11_01-32` will be mapped in just one file `acl1_1k_tot.out`, in which each line corresponds to an experiment(same ruleset seed, same ruleset size, different ruleset, different rate), formatted in this way: `RX-pps TX-pps RX-mbit/s TX-mbit/s RX-#packets TX-#packets`
 
 
-* make plot_pps path=<$elog_parsed_speed>
-
-`plot_pps`: it will plot throughput in pps among different ruleset size.
-
-It needs 5 files in input that it will take from the path in input (you can modify file from variables in the Makefile)
-
-```
-xc_f=$(path)/elog_parsed_speed/XC_1k_tot.out
-a_1k=$(path)/elog_parsed_speed/acl1_1k_tot.out
-a_2k=$(path)/elog_parsed_speed/acl1_2k_tot.out
-a_4k=$(path)/elog_parsed_speed/acl1_4k_tot.out
-a_8k=$(path)/elog_parsed_speed/acl1_8k_tot.out
-```
+* To plot throughput we need to create a table in which are summarize raw-data (Summary directory!) and plot result from there.
 
