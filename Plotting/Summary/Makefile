@@ -26,3 +26,21 @@ comp_tot:
 	python general-11.py file_info/script-class-part.info file_info/compare-tot1.info
 	mv pps1.png $(pathp)/comp_tot_classification-$(dt).png
 	mv pps2.png $(pathp)/comp_tot_partition_log-$(dt).png
+
+
+
+
+tm_seed:
+	python general-11.py file_info/script-thr-part.info file_info/tm_seeds.info
+	mv pps1.png $(pathp)/tm_seed_throughput-$(dt).png
+	mv pps2.png $(pathp)/tm_seed_partition-$(dt).png
+
+tm_seed2:
+	python general-11.py file_info/script-class-part.info file_info/tm_seeds.info
+	mv pps1.png $(pathp)/tm_seed_classification-$(dt).png
+	mv pps2.png $(pathp)/tm_seed_partition-$(dt).png
+
+tm_seed_off:
+	python general-11.py file_info/script-class-part.info file_info/tm_off_seeds.info
+	mv pps1.png $(pathp)/tm_seed_off_classification-$(dt).png
+	mv pps2.png $(pathp)/tm_seed_off_partition-$(dt).png

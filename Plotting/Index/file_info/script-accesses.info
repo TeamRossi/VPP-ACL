@@ -1,0 +1,3 @@
+off
+slide
+{'type':'accesses','title':'Distribution Memory access - ACL3_8K', 'namefile':'pps1', 'x-label':'access', 'xlim':0, 'binwidth':'1'}

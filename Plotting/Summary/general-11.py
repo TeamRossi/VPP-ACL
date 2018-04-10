@@ -218,19 +218,20 @@ def loaderPaper(readfile, l_container={}):
 
         readfile.close
 
-        for column in range(len(l_container['size'])):
-                element = l_container['class'][(column-1)]
-                element = element/firstime
-                l_container['class'][(column-1)] = element
-                element = l_container['part'][(column-1)]
-                element = element/firstime
-                l_container['part'][(column-1)] = element
-                element = l_container['cons'][(column-1)]
-                element = element/firstime
-                l_container['cons'][(column-1)] = element
-                element = l_container['quer'][(column-1)]
-                element = element/firstime
-                l_container['quer'][(column-1)] = element
+	if firstime != 0 :
+		for column in range(len(l_container['size'])):
+			element = l_container['class'][(column-1)]
+			element = element/firstime
+			l_container['class'][(column-1)] = element
+			element = l_container['part'][(column-1)]
+			element = element/firstime
+			l_container['part'][(column-1)] = element
+			element = l_container['cons'][(column-1)]
+			element = element/firstime
+			l_container['cons'][(column-1)] = element
+			element = l_container['quer'][(column-1)]
+			element = element/firstime
+			l_container['quer'][(column-1)] = element
 
 
 	return l_container

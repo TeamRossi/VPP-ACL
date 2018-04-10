@@ -1,0 +1,3 @@
+off
+slide
+{'type':'ord_ind','title':'Distribution Mask-id - ACL3_8K', 'namefile':'pps1', 'x-label':'Mask-id', 'xlim':0, 'binwidth':'1'}

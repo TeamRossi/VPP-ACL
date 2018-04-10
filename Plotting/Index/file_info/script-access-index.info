@@ -1,0 +1,4 @@
+off
+slide
+{'type':'accesses','title':'Total accesses', 'namefile':'pps1', 'x-log':'on', 'y-log':'off', 'y-label':'Accesses (HT + Collisions)'}
+{'type':'ord_ind','title':'Lookup index', 'namefile':'pps2', 'x-log':'on', 'y-log':'off', 'y-label':'Index'}

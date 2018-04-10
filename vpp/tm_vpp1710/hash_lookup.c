@@ -1122,6 +1122,52 @@ addresses; both range fields (like ports) and exact match fields
 
 */
 void 
+relax_tuple2(fa_5tuple_t *mask){
+	fa_5tuple_t *original_mask = malloc(sizeof(fa_5tuple_t));
+	clib_memcpy(original_mask, mask, sizeof(fa_5tuple_t));
+
+	DBG( "TM-relaxing");
+	//print_mask(mask);
+
+	u64 ip_sa = clib_net_to_host_u64(mask->addr[0].as_u64[1]);
+	u64 ip_da = clib_net_to_host_u64(mask->addr[1].as_u64[1]);
+
+	int counter1 = count_bits(ip_sa);
+	int counter2 = count_bits(ip_da);
+//se delta=0????
+	const int deltaThreshold = 4;
+	int delta = counter1 - counter2;
+	if (-delta > deltaThreshold) {
+		mask->addr[0].as_u64[1] = 0;
+		mask->l4.port[0] = 0;
+        } else if (delta > deltaThreshold) {
+		mask->addr[1].as_u64[1] = 0;
+		mask->l4.port[1] = 0;
+        }
+	////print_mask(mask);
+
+			//only for ipv4
+	if( ip_sa == 0xFFFFFFFF ) mask->addr[0].as_u64[1] = clib_host_to_net_u64((ip_sa << 2)&0xFFFFFFFF);
+	else if( ip_sa > 0xFFFFFF00 ) mask->addr[0].as_u64[1] = clib_host_to_net_u64((ip_sa << 2)&0xFFFFFFFF);
+	else if( ip_sa > 0xFFFF0000 ) mask->addr[0].as_u64[1] = clib_host_to_net_u64((ip_sa << 1)&0xFFFFFFFF);
+	else if( ip_sa > 0xFF000000 ) mask->addr[0].as_u64[1] = clib_host_to_net_u64((ip_sa << 1)&0xFFFFFFFF);
+
+	if( ip_da == 0xFFFFFFFF ) mask->addr[1].as_u64[1] = clib_host_to_net_u64((ip_da << 2)&0xFFFFFFFF);
+	else if( ip_da > 0xFFFFFF00 ) mask->addr[1].as_u64[1] = clib_host_to_net_u64((ip_da << 2)&0xFFFFFFFF);
+	else if( ip_da > 0xFFFF0000 ) mask->addr[1].as_u64[1] = clib_host_to_net_u64((ip_da << 1)&0xFFFFFFFF);
+	else if( ip_da > 0xFF000000 ) mask->addr[1].as_u64[1] = clib_host_to_net_u64((ip_da << 1)&0xFFFFFFFF);
+
+
+	mask->pkt.is_nonfirst_fragment = 0;
+	mask->pkt.l4_valid = 0;
+	//print_mask(mask);
+	if(compare_tuples(mask, original_mask) != 0){
+		DBG( "TM-relaxing-ERROR");
+		clib_memcpy(mask, original_mask, sizeof(fa_5tuple_t));
+	}
+	DBG( "TM-relaxing-end");
+}
+void 
 relax_tuple(fa_5tuple_t *mask){
 	fa_5tuple_t *original_mask = malloc(sizeof(fa_5tuple_t));
 	clib_memcpy(original_mask, mask, sizeof(fa_5tuple_t));
@@ -1253,14 +1299,23 @@ tm_assign_mask_type_index(acl_main_t *am, fa_5tuple_t *mask, u32 sw_if_index, u8
 	u32 mask_type_index = ~0;
 	u32 for_mask_type_index = ~0;
 	ace_mask_type_entry_t *mte;
-	applied_hash_acl_info_t *pal = vec_elt_at_index((*applied_hash_acls), sw_if_index);
 	/* look for existing mask comparable with the one in input */
 	//for(for_mask_type_index=0; for_mask_type_index < pool_len(am->ace_mask_type_pool); for_mask_type_index++) {
+/*
+	applied_hash_acl_info_t *pal = vec_elt_at_index((*applied_hash_acls), sw_if_index);
 	for(for_mask_type_index = pool_len(am->ace_mask_type_pool) -1; for_mask_type_index > 0 ; --for_mask_type_index) {
 		if (!clib_bitmap_get(pal->mask_type_index_bitmap, for_mask_type_index)) {
-			/* This bit is not set. Avoid trying to match */
 			continue;
 		}
+*/
+	hash_applied_mask_info_t **hash_applied_mask_pool = is_input ? vec_elt_at_index(am->input_hash_applied_mask_pool_by_sw_if_index, sw_if_index) :
+		vec_elt_at_index(am->output_hash_applied_mask_pool_by_sw_if_index,  sw_if_index);
+	hash_applied_mask_info_t *minfo; 
+
+//	for(int order_index = 0; order_index < vec_len((*hash_applied_mask_pool)); order_index++) {
+	for(int order_index = vec_len((*hash_applied_mask_pool)) -1; order_index >= 0; order_index--) {
+		minfo = vec_elt_at_index((*hash_applied_mask_pool), order_index);
+		for_mask_type_index = minfo->mask_type_index;
 		mte = vec_elt_at_index(am->ace_mask_type_pool, for_mask_type_index);
 		if(compare_tuples(&mte->mask, mask) == 0){
 			mask_type_index = (mte - am->ace_mask_type_pool);
@@ -1280,7 +1335,7 @@ tm_assign_mask_type_index(acl_main_t *am, fa_5tuple_t *mask, u32 sw_if_index, u8
 
 		int spot = vec_len((*hash_applied_mask_pool));
 		vec_validate((*hash_applied_mask_pool), spot);
-		hash_applied_mask_info_t *minfo = vec_elt_at_index((*hash_applied_mask_pool), spot);
+		minfo = vec_elt_at_index((*hash_applied_mask_pool), spot);
 		minfo->mask_type_index = mask_type_index;
 		minfo->num_entries = 0;
 		minfo->max_collisions = 0;
@@ -1584,7 +1639,7 @@ split_partition(acl_main_t *am, u32 first_index,
 			break;
 		case 4: min_tuple->l4.proto = max_tuple->l4.proto << (best_delta)/2;
 			break;
-		default: //relax_tuple(min_tuple);
+		default: relax_tuple2(min_tuple);
 			break;
 	}
 
@@ -1981,9 +2036,9 @@ tm_multi_acl_match_get_applied_ace_index(acl_main_t *am, fa_5tuple_t *match)
 //Added by Valerio
 #ifdef VALE_ELOG_ACL
 
-  u32 count_loop=0; 
-  u8 flags=0; 
-  u8 flagr=0;
+  u32 cand_ord_index=0; 
+  u32 count_htaccess=0; 
+  u32 count_col=0;
 
 #endif
 
@@ -2033,7 +2088,7 @@ tm_multi_acl_match_get_applied_ace_index(acl_main_t *am, fa_5tuple_t *match)
 
 //Added by Valerio
 #ifdef VALE_ELOG_ACL
-  count_loop++; 
+  count_htaccess++; 
 #endif
     kv_key->pkt.mask_type_index_lsb = mask_type_index;
     DBG("        KEY %3d: %016llx %016llx %016llx %016llx %016llx %016llx", mask_type_index,
@@ -2051,11 +2106,13 @@ tm_multi_acl_match_get_applied_ace_index(acl_main_t *am, fa_5tuple_t *match)
 		    if(curr_index < curr_match_index){
 			    //Added by Valerio
 #ifdef VALE_ELOG_ACL
-			    //count_loop++; 
-			    if(collisions > 1) flagr= (flagr + 1) & 0xFF;
+			    if(collisions > 1) count_col= (count_col + 1);
 #endif
 			    if(tm_single_ace_match_5tuple(am, pae->acl_index, pae->ace_index, match)){
 				    curr_match_index = curr_index;
+#ifdef VALE_ELOG_ACL
+				    cand_ord_index = order_index;
+#endif
 			    }
 		    }
 		    curr_index = pae->next_applied_entry_index;
@@ -2066,17 +2123,18 @@ tm_multi_acl_match_get_applied_ace_index(acl_main_t *am, fa_5tuple_t *match)
   //Added by Valerio
 #ifdef VALE_ELOG_ACL
   /*Log event*/
-  vlib_main_t *vm = &vlib_global_main;
   // Replace and/or change with u32 Vector Size inside the stuct. Also change the %ll
   ELOG_TYPE_DECLARE (e) = {
-	  .format = "ACE: %d, CountLoop = %d, FlagS: %d Flagr: %d",
-	  .format_args = "i4i4i1i1",
+	  .format = "ACE: %d, Order_i = %d, HT_a: %d, Col: %d ",
+	  .format_args = "i4i4i4i4",
   };
-  struct {u32 ace_i; u32 count_loop; u8 flags; u8 flagr;} *ed;
-  ed = ELOG_DATA (&vm->elog_main, e);
-  ed->count_loop = count_loop;
-  ed->flags = flags;
-  ed->flagr = flagr;
+  struct {u32 ace_i; u32 cand_ord_index; u32 ht_ac; u32 col;} *ed;
+  ed = ELOG_DATA (&vlib_global_main.elog_main, e);
+  //number of access in ht
+  ed->ht_ac = count_htaccess;
+  //number of collisions
+  ed->col = count_col;
+  ed->cand_ord_index = cand_ord_index;
   if (curr_match_index < vec_len((*applied_hash_aces))) {
     applied_hash_ace_entry_t *pae = vec_elt_at_index((*applied_hash_aces), curr_match_index);
     ed->ace_i = pae->ace_index;
