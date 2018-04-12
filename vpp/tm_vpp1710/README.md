@@ -8,9 +8,11 @@
 
 Code adapted by Valerio Bruschi (valerio.bruschi@telecom-paristech.fr) 
 
-and based on the TupleMerge [1] simulator kindly made available
+and based on the TupleMerge [1] simulator kindly made available 
 
-by  James Daly (dalyjamese@gmail.com) and  Eric Torng (torng@cse.msu.edu)
+(at https://github.com/drjdaly/tuplemerge) by  James Daly 
+
+(dalyjamese@gmail.com) and  Eric Torng (torng@cse.msu.edu)
 
 ( http://www.cse.msu.edu/~dalyjame/ or http://www.cse.msu.edu/~torng/ )
 
