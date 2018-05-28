@@ -1,4 +1,0 @@
-off
-paper
-{'type':'thr','title':'Throughput', 'namefile':'pps1', 'x-log':'on', 'y-log':'on', 'y-label':'RX (MPPS)'}
-{'type':'part','title':'', 'namefile':'pps2', 'x-log':'on', 'y-log':'off', 'y-label':'Partition (count.)'}

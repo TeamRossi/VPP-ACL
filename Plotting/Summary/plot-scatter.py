@@ -1,21 +1,26 @@
 from matplotlib import pyplot as plt
+import matplotlib as mpl
 import sys
 import math
 import numbers
 import numpy as np
+import json
 
 from scipy.interpolate import interp1d
+from matplotlib.ticker import ScalarFormatter
+
 
 def loaderPaper(readfile, l_container={}): 
 
 	l_container={'size':[], 'class':[], 'part':[], 'cons':[], 'quer':[]}
 	cline=-1
-	count=0
+	counter=0
 	firstime=0
 	for line in readfile:
 		for s in line.split():
 			element = []
-			if count > 0 :
+			count = counter - 4
+			if counter > 4 and counter < 11:
 				if ((firstime) == 0) :
 					if cline == 0:
 						element = l_container['size']
@@ -49,10 +54,10 @@ def loaderPaper(readfile, l_container={}):
 						element = l_container['quer'][(count-1)]
 						element = element +float(s)
 						l_container['quer'][(count-1)] = element
-				count = count + 1
-			else: count = count + 1
+				counter = counter + 1
+			else: counter = counter + 1
 		cline=cline + 1
-		count=0
+		counter=0
 		if cline > 4: 
 		   	cline=-1
 			firstime = firstime + 1
@@ -171,120 +176,165 @@ def seed_interpol(seed_line):
 	return seed_interpol,xnew,x
 
 
+def loaderConf(conf_script):
+
+        container={}
+        cline=-1
+        tmp_container={'gui':'', 'style':'', 'fig1':{}, 'fig2':{}}
+        for line in conf_script:
+                line = line.replace('\n','')
+                ccolumn=0
+                cline=cline+1
+                if cline == 0:
+                        tmp_container['gui'] = str(line)
+                if cline == 1:
+                        tmp_container['style'] = str(line)
+                if cline == 2:
+                        #container={'type':'','title':'', 'namefile':'', 'log':''}
+                        line = line.replace("'", "\"")
+                        tmp_container['fig1'] = json.loads(line)
+
+        container = tmp_container
+
+        conf_script.close
+
+        return container
+
+def loaderFile(file_script):
+
+        container=[]
+        cline=0
+        for line in file_script:
+                line = line.replace('\n','')
+                ccolumn=0
+                cline=cline+1
+                tmp_container={'path':'', 'type':'', 'label':''}
+                for s in line.split(','):
+                        if ccolumn == 0:
+                                tmp_container['path'] = str(s)
+                        if ccolumn == 1:
+                                tmp_container['type'] = str(s)
+                        if ccolumn == 2:
+                                tmp_container['label'] = str(s)
+                        if ccolumn == 3:
+                                tmp_container['color'] = str(s)
+                        if ccolumn == 4:
+                                tmp_container['linestyle'] = str(s)
+                        if ccolumn == 5:
+                                tmp_container['marker'] = str(s)
+                        if ccolumn == 6:
+                                tmp_container['fillstyle'] = str(s)
+
+                        ccolumn = ccolumn + 1
+                cline=cline + 1
+                container.append(tmp_container)
+
+        file_script.close
+
+        return container
+
 try:
         print("file1: \t" + str(sys.argv[1]))
         print("file2: \t" + str(sys.argv[2]))
-        print("file3: \t" + str(sys.argv[3]))
-        print("file4: \t" + str(sys.argv[4]))
-	print("gnu_active: \t" + str(sys.argv[5]))
 
         f1 = str(sys.argv[1])
         f2 = str(sys.argv[2])
-        f3 = str(sys.argv[3])
-        f4 = str(sys.argv[4])
-        gnu_active = int(sys.argv[5])
 
-        fr1 = open(f1, 'r')
-        fr2 = open(f2, 'r')
-        fr3 = open(f3, 'r')
-        fr4 = open(f4, 'r')
+        fconf = open(f1, 'r')
+        finfo = open(f2, 'r')
+
 except IndexError:
         print("Error: no Filename")
         sys.exit(2)
 
 
-seed1_line = {}
-seed1_line = loaderPaper(fr1)
-seed1a = np.average(seed1_line['cons'])
-seed1b = np.average(seed1_line['class'])
-area1 = [np.std(seed1_line['class']), np.std(seed1_line['cons'])]
-print("TSS: "+str(seed1a)+"-"+str(seed1b))
+files_info=[]
+files_info = loaderFile(finfo)
 
-seed2_line = {}
-seed2_line = loaderPaper(fr2)
-seed2a = np.average(seed2_line['cons'])
-seed2b = np.average(seed2_line['class'])
-area2 = [np.std(seed2_line['class']), np.std(seed2_line['cons'])]
-print("TM: "+str(seed2a)+"-"+str(seed2b))
+conf_info=[]
+conf_info = loaderConf(fconf)
 
-seed3_line = {}
-seed3_line = loaderPaper(fr3)
-seed3a = np.average(seed3_line['cons'])
-seed3b = np.average(seed3_line['class'])
-area3 = [np.std(seed3_line['class']), np.std(seed3_line['cons'])]
-print("PS: "+str(seed3a)+"-"+str(seed3b))
+print(str(files_info))
+print(str(conf_info))
 
-seed4_line = {}
-seed4_line = loaderPaper(fr4)
-seed4a = np.average(seed4_line['cons'])
-seed4b = np.average(seed4_line['class'])
-area4 = [np.std(seed4_line['class']), np.std(seed4_line['cons'])]
+if conf_info['style'] == 'slide':
+        plt.style.use('valerio-slide')
+        fig1, ax1 = plt.subplots(figsize=(14,8))
+else:
+        width = 7.5
+        height = width / 1.618
+        params = {
+           'axes.labelsize': 16,
+           'font.size': 16,
+           'legend.fontsize': 13,
+           'xtick.labelsize': 13,
+           'ytick.labelsize': 13,
+           'text.usetex': False,
+           'figure.figsize': [width, height]
+           }
+        mpl.rcParams.update(params)
+        fig1, ax1 = plt.subplots()
 
-print("SS: "+str(seed4a)+"-"+str(seed4b))
-#print("SS: "+str(seed4_line['cons'])+str(seed4_line['class']))
+typea=str(conf_info['fig1']['type'])
+
+print("Types: "+ typea)
+
+for single_file in files_info:
+        seed_line = {}
+        open_file = open(single_file['path'], 'r')
+
+        if single_file['type'] == 'vpp':
+                seed_line = loaderVpp(open_file)
+
+        if single_file['type'] == 'vpp-tot':
+                seed_line = loaderVppTot(open_file)
+
+        if single_file['type'] == 'paper':
+                seed_line = loaderPaper(open_file)
+
+        if single_file['type'] == 'paper-tot':
+                #seed_line = loaderPaperTot(open_file)
+		print("error")
+
+        print(str(single_file))
+        print(str(seed_line))
+
+	seeda = np.average(seed_line['cons'])
+	seedb = np.average(seed_line['class'])
+	#area = np.pi*155*np.std(seed_line['class'])/np.linalg.norm(seed_line['class']) 
+	area = np.pi*55
+	print(str(single_file['label'])+": "+str(seeda)+"-"+str(seedb)+"; "+str(area))
+	ax1.scatter(seedb, seeda, s=area, alpha=0.75, label=single_file['label'])
 
 
-plt.style.use('valerio-slide')
-#fig = plt.figure()
+if conf_info['fig1']['x-log'] == 'on':
+        ax1.set_xscale("log", basey=10)
+        ax1.xaxis.set_major_formatter(ScalarFormatter())
+if conf_info['fig1']['y-log'] == 'on':
+        ax1.set_yscale("log", basey=10)
+        ax1.yaxis.set_major_formatter(ScalarFormatter())
 
 
-fig1, (ax1, ax2) = plt.subplots(2,1, figsize=(14, 8), sharex=True)
-
-area = np.pi*185
-ax1.scatter(seed1b, seed1a, s=area, alpha=0.75, label='Tuple Space Search')
-ax1.scatter(seed2b, seed2a, s=area, alpha=0.75, label='TupleMerge')
-ax1.scatter(seed3b, seed3a, s=area, alpha=0.75, label='PartitionSort')
-ax1.scatter(seed4b, seed4a, s=area, alpha=0.75, label='SmartSplit')
-
-ax2.scatter(seed1b, seed1a, s=area, alpha=0.75, label='Tuple Space Search')
-ax2.scatter(seed2b, seed2a, s=area, alpha=0.75, label='TupleMerge')
-ax2.scatter(seed3b, seed3a, s=area, alpha=0.75, label='PartitionSort')
-ax2.scatter(seed4b, seed4a, s=area, alpha=0.75, label='SmartSplit')
-
-
-ax1.set_xticks(np.arange(0,3,0.10))
-ax2.set_xticks(np.arange(0,3,0.10))
-
-ax1.set_ylabel('Update Time ' + u'$(ms)$', labelpad=20)
-ax1.yaxis.set_label_coords(1.05, -0.025)
-ax2.set_xlabel('Classification Time ' + u'$({\mu}s)$')
+ax1.set_ylabel('Update Time ' + u'$(ms)$')
+ax1.set_xlabel('Classification Time ' + u'$({\mu}s)$')
 
 ax1.set_axisbelow(True)
 ax1.xaxis.grid(color='gray', linestyle='dashed', linewidth=1)
 ax1.yaxis.grid(color='gray', linestyle='dashed', linewidth=1)
-ax2.set_axisbelow(True)
-ax2.xaxis.grid(color='gray', linestyle='dashed', linewidth=1)
-ax2.yaxis.grid(color='gray', linestyle='dashed', linewidth=1)
 
 
+ax1.set_ylim(3, 20000)  # outliers only
+ax1.set_xlim(0.25, 2.25)  # outliers only
 handles, labels = ax1.get_legend_handles_labels()
 ax1.legend(handles[::-1], labels[::-1])
 
-# zoom-in / limit the view to different portions of the data
-ax1.set_ylim(3800, 4100)  # outliers only
-ax2.set_ylim(0, 20)  # most of the data
-
-# hide the spines between ax and ax2
-ax1.spines['bottom'].set_visible(False)
-ax2.spines['top'].set_visible(False)
-ax1.xaxis.tick_top()
-ax1.tick_params(labeltop='off')  # don't put tick labels at the top
-ax2.xaxis.tick_bottom()
 
 
-d = .005  # how big to make the diagonal lines in axes coordinates
-# arguments to pass to plot, just so we don't keep repeating them
-kwargs = dict(transform=ax1.transAxes, color='k', clip_on=False)
-ax1.plot((-d, +d), (-d, +d), **kwargs)        # top-left diagonal
-ax1.plot((1 - d, 1 + d), (-d, +d), **kwargs)  # top-right diagonal
-
-kwargs.update(transform=ax2.transAxes)  # switch to the bottom axes
-ax2.plot((-d, +d), (1 - d, 1 + d), **kwargs)  # bottom-left diagonal
-ax2.plot((1 - d, 1 + d), (1 - d, 1 + d), **kwargs)  # bottom-right diagonal
+fig1.savefig(str(conf_info['fig1']['namefile'])+'.svg', format='svg', bbox_inches='tight')
+fig1.savefig(str(conf_info['fig1']['namefile'])+'.png', format='png', bbox_inches='tight')
+fig1.savefig(str(conf_info['fig1']['namefile'])+'.pdf', format='pdf', bbox_inches='tight')
 
 
-fig1.savefig('pps1.png')
-
-if gnu_active == 0:
-	plt.show()
+if conf_info['gui'] == 'on':
+        plt.show()
 

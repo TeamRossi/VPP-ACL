@@ -1,4 +1,0 @@
-off
-slide
-{'type':'class','title':'Classification time', 'namefile':'pps1', 'x-log':'on', 'y-log':'off', 'y-label':''}
-{'type':'part','title':'', 'namefile':'pps2', 'x-log':'on', 'y-log':'off', 'y-label':'Partition (count.)'}

@@ -1,4 +1,5 @@
 from matplotlib import pyplot as plt
+import matplotlib as mpl
 import sys
 import math
 import numbers
@@ -53,6 +54,12 @@ def loaderFile(file_script):
 				tmp_container['label'] = str(s)
 			if ccolumn == 3:
 				tmp_container['color'] = str(s)
+			if ccolumn == 4:
+				tmp_container['linestyle'] = str(s)
+			if ccolumn == 5:
+				tmp_container['marker'] = str(s)
+			if ccolumn == 6:
+				tmp_container['fillstyle'] = str(s)
 
 			ccolumn = ccolumn + 1
 		cline=cline + 1
@@ -165,7 +172,48 @@ def loaderVppTot(readfile, l_container={}):
 		l_container['part'][(column-1)] = element
 	return l_container
 
+
 def loaderPaper(readfile, l_container={}): 
+
+        l_container={'size':[], 'class':[], 'part':[], 'cons':[], 'quer':[]}
+        cline=0
+        count=0
+        firstime=0
+        for line in readfile:
+                for s in line.split():
+                        element = []
+                        if count > 0 :
+                                if ((firstime) == 0) :
+                                        if cline == 0:
+                                                element = l_container['size']
+                                                element.append(s)
+                                        if cline == 1:
+                                                element = l_container['class']
+                                                element.append(float(s))
+                                        if cline == 2:
+                                                element = l_container['part']
+                                                element.append(float(s))
+                                        if cline == 3:
+                                                element = l_container['cons']
+                                                element.append(float(s))
+                                        if cline == 4:
+                                                element = l_container['quer']
+                                                element.append(float(s))
+                                count = count + 1
+                        else: count = count + 1
+                cline=cline + 1
+                count=0
+                if cline > 4:
+                        cline=-1
+                        firstime = firstime + 1
+
+        readfile.close
+
+	return l_container
+
+
+
+def loaderPaperTot(readfile, l_container={}): 
 
         l_container={'size':[], 'class':[], 'part':[], 'cons':[], 'quer':[]}
         cline=-1
@@ -252,7 +300,8 @@ def seed_interpol(seed_line):
 	xnew.append(64000)
 	seed_interpol = f_interpol(xnew)
 	
-	return seed_interpol,xnew,x
+	#return seed_interpol,xnew,x
+	return y,x,x
 
 
 try:
@@ -284,11 +333,25 @@ if conf_info['style'] == 'slide':
 	fig1, ax1 = plt.subplots(figsize=(14,8))
 	fig2, ax2 = plt.subplots(figsize=(14,8))
 else:
-	fig1, ax1 = plt.subplots(figsize=(8,6))
-	fig2, ax2 = plt.subplots(figsize=(8,6))
+	width = 7.5
+	height = width / 1.618
+	params = {
+	   'axes.labelsize': 16,
+	   'font.size': 16,
+	   'legend.fontsize': 13,
+	   'xtick.labelsize': 13,
+	   'ytick.labelsize': 13,
+	   'text.usetex': False,
+	   'figure.figsize': [width, height]
+	   }
+	mpl.rcParams.update(params)
+	fig1, ax1 = plt.subplots()
+	fig2, ax2 = plt.subplots()
 
 typea=str(conf_info['fig1']['type'])
 typeb=str(conf_info['fig2']['type'])
+
+print("Types: "+ typea + ", " + typeb)
 
 for single_file in files_info:
 	seed_line = {}
@@ -303,13 +366,17 @@ for single_file in files_info:
 	if single_file['type'] == 'paper':
 		seed_line = loaderPaper(open_file)
 
+	if single_file['type'] == 'paper-tot':
+		seed_line = loaderPaperTot(open_file)
+
 	print(str(single_file))
+	print(str(seed_line))
 
 	seeda, xa , x1 = seed_interpol(seed_line[typea])
 	seedb, xb , x2 = seed_interpol(seed_line[typeb])
 
-	ax1.plot(xa, seeda, str(single_file['color']), label=single_file['label'])
-	ax2.plot(xb, seedb, str(single_file['color']), label=single_file['label'])
+	ax1.plot(xa, seeda, fillstyle=str(single_file['fillstyle']), color=str(single_file['color']), linestyle=str(single_file['linestyle']), marker=str(single_file['marker']), markersize=5, label=single_file['label'])
+	ax2.plot(xb, seedb, fillstyle=str(single_file['fillstyle']), color=str(single_file['color']), linestyle=str(single_file['linestyle']), marker=str(single_file['marker']), markersize=5, label=single_file['label'])
 
 #====== Figure 1 specification
 ax1.set_xlabel('Ruleset size')
@@ -341,7 +408,9 @@ ax1.set_title(str(conf_info['fig1']['title']))
 handles, labels = ax1.get_legend_handles_labels()
 ax1.legend(handles[::-1], labels[::-1])
 
-fig1.savefig(str(conf_info['fig1']['namefile']))
+fig1.savefig(str(conf_info['fig1']['namefile'])+'.svg', format='svg', bbox_inches='tight')
+fig1.savefig(str(conf_info['fig1']['namefile'])+'.png', format='png', bbox_inches='tight')
+fig1.savefig(str(conf_info['fig1']['namefile'])+'.pdf', format='pdf', bbox_inches='tight')
 
 #====== Figure 2 specification
 ax2.set_xlabel('Ruleset size')
@@ -354,6 +423,7 @@ if conf_info['fig2']['x-log'] == 'on':
 	ax2.set_xscale("log", basex=2)
 if conf_info['fig2']['y-log'] == 'on':
 	ax2.set_yscale("log", basey=10)
+	ax2.yaxis.set_major_formatter(ScalarFormatter())
 
 
 ax2.set_xticks(x2)
@@ -368,7 +438,9 @@ ax2.legend(handles[::-1], labels[::-1])
 
 ax2.set_title(str(conf_info['fig2']['title']))
 
-fig2.savefig(str(conf_info['fig2']['namefile']))
+fig2.savefig(str(conf_info['fig2']['namefile'])+'.svg', format='svg', bbox_inches='tight')
+fig2.savefig(str(conf_info['fig2']['namefile'])+'.png', format='png', bbox_inches='tight')
+fig2.savefig(str(conf_info['fig2']['namefile'])+'.pdf', format='pdf', bbox_inches='tight')
 
 if conf_info['gui'] == 'on':
 	plt.show()

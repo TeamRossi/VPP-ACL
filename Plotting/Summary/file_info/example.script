@@ -1,0 +1,4 @@
+off
+paper
+{'type':'thr','title':'Throughput', 'namefile':'pps1', 'x-log':'on', 'y-log':'off', 'y-label':'Throughput (Mpps)'}
+{'type':'class','title':'Classification', 'namefile':'pps2', 'x-log':'on', 'y-log':'off', 'y-label':''}
