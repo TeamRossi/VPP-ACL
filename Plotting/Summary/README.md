@@ -1,6 +1,7 @@
 In this folder, there are a set of scripts that enable you to generate figures on the different metrics, starting from a general summary of previous experiments.
 
-e.g. as an example, we plot the throughput metric ![alt text](example-img/vpp1704_throughput.png)
+e.g. as an example, we plot the throughput metric 
+<img src="example-img/vpp1704_throughput.png" width="400">
 
 ---
 # Generate Table

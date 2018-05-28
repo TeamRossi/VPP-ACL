@@ -35,7 +35,8 @@ it is important to notice that the information related the plot (i.e. about path
 
 `hist`: to plot the histogram of classification time distributions per ruleset size.
 
-e.g. as an example, we plot the throughput metric ![alt text](example-img/vpp1704_distribution.png)
+e.g. as an example, we plot the throughput metric 
+<img src="example-img/vpp1704_distribution.png" width="400">
 
 * `make hist_$target `
 
