@@ -7,7 +7,7 @@ e.g. as an example, we plot the throughput metric
 
 ---
 # Generate Table
-Firstly, we should generate a summary of previous experiments, *running `sh script_table.sh` *, below an example of the output file:
+Firstly, we should generate a summary of previous experiments, running `sh script_table.sh` , below an example of the output file:
 ```
 Size:           1	10	100	500	1K	2K	4K	8K	16K	32K	64k	
 Throughput:     4.756	3.872	3.932	3.816	2.018	1.816	1.348	1.518	2.254	2.896	1.598	

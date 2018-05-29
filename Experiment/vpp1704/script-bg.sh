@@ -62,22 +62,6 @@ echo "=========== $(date '+%d-%m_%H-%M') ============"
 done
 '
 
-#this kind experiment will generate debug raw data in which are reported #mask_type created
-#number of max collisions and how many entries in each mask_type
-#create in $EXP_RES directory a new directory called Partition in which there are file from the vppctl functions
-
-:'
-for class in acl1 #acl2 acl3 acl4 acl5
-do
-#for dirs in 1_1 10_1 100_1 500_1 1k_1 2k_1 4k_1 8k_1 16k_1 32k_1 #
-for dirs in 1k_1 2k_1 4k_1 8k_1 16k_1 32k_1 64k_1
-do
-        echo "================$dirs============="
-        sh partition.sh $dirs $class 
-done
-done
-mv $EXP_RES/Summary/Partition_$(date '+%d-%m') $EXP_RES/Summary/Partition_$(date '+%d-%m_%H-%M')
-'
 
 echo "=========== $(date '+%d-%m_%H-%M') ============"
 
