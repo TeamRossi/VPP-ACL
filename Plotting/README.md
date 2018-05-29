@@ -10,7 +10,7 @@ e.g. as an example
 e.g. as an example 
 
 <img src="Summary/example-img/vpp1704_throughput.png" width="400">
-<img src="example-img/tm_seeds_throughput.png" width="400">
+<img src="Summary/example-img/tm_seeds_throughput.png" width="400">
 
 
 * **Throughput**: here you can parse all data generated from the `acl-throughput_simple.sh` script in Experiment directory (ELOG variable MUST be undefined!)
