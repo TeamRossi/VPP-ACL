@@ -45,24 +45,45 @@ function master(args)
 	local file=args.filename
 	print("Filename: " .. file)
 	local lines = lines_from(file)
-	local rules_icmp = {}
-	local rules_tcp = {}
-	local rules_udp = {}
+	local tab_thr = 900
+
+	local rules_icmp = {{}}
+	local icmp_index=1
+	local rules_tcp = {{}}
+	local tcp_index=1
+	local rules_udp = {{}}
+	local udp_index=1
+
 	--File parsing
 	for k,v in pairs(lines) do
 		--  print('line[' .. k .. ']', v)
 		local words = {}
 		local i=1
+
+
 		for w in (v .. "\t"):gmatch("([^\t]*)\t") do
 			table.insert(words, tonumber(w))
 			i=i+1
 		end
+
 		if tonumber(words[5]) == 1 then
-			table.insert(rules_icmp, words)
+			table.insert(rules_icmp[icmp_index], words)
+			if table.getn(rules_icmp[icmp_index]) > tab_thr then
+				icmp_index = icmp_index + 1;
+				table.insert(rules_icmp, {})
+			end
 		elseif tonumber(words[5]) == 6 then
-			table.insert(rules_tcp, words)
+			table.insert(rules_tcp[tcp_index], words)
+			if table.getn(rules_tcp[tcp_index]) > tab_thr then
+				tcp_index = tcp_index + 1;
+				table.insert(rules_tcp, {})
+			end
 		else 
-			table.insert(rules_udp, words)
+			table.insert(rules_udp[udp_index], words)
+			if table.getn(rules_udp[udp_index]) > tab_thr then
+				udp_index = udp_index + 1;
+				table.insert(rules_udp, {})
+			end
 		end
 	end
 
@@ -77,16 +98,33 @@ function master(args)
 --]]
 	
 
-	local tcp_nrules = table.getn(rules_tcp)
-	local udp_nrules = table.getn(rules_udp)
-	local icmp_nrules = table.getn(rules_icmp)
+	local tcp_nrules = 0
+	local udp_nrules = 0
+	local icmp_nrules = 0
+
+	print("TCP: "..table.getn(rules_tcp))
+	for k,v in pairs(rules_tcp) do
+		tcp_nrules = tcp_nrules + table.getn(v)
+		--print("Index "..k.." : "..table.getn(v))
+	end
+	print("UDP: "..table.getn(rules_udp))
+	for k,v in pairs(rules_udp) do
+		udp_nrules = udp_nrules + table.getn(v)
+		--print("Index "..k.." : "..table.getn(v))
+	end
+	print("ICMP: "..table.getn(rules_icmp))
+	for k,v in pairs(rules_icmp) do
+		icmp_nrules = icmp_nrules + table.getn(v)
+		--print("Index "..k.." : "..table.getn(v))
+	end
+
+	print("Tcp: " .. tcp_nrules .. " |Udp: " .. udp_nrules .. " |Icmp: " .. icmp_nrules)
 	local tot_rules = tcp_nrules + udp_nrules + icmp_nrules 
 	print("Tot_rules: " .. tot_rules)
-	print("Tcp: " .. tcp_nrules .. " |Udp: " .. udp_nrules .. " |Icmp: " .. icmp_nrules)
+	--Valerio end
 	print("Valerio parser end")
 
-	--Valerio end
-
+	--os.exit()
 
 	device.waitForLinks()
 
@@ -127,35 +165,32 @@ function master(args)
 
 	-- Using a single queue
 	--TX tasks
-	if table.getn(rules_tcp) > 0 then
-		lm.startTask("simple_forward_tcp", args.dev[1]:getTxQueue(0), rules_tcp, pkt_size)
-	end
-	if table.getn(rules_udp) > 0 then
-		lm.startTask("simple_forward_udp", args.dev[1]:getTxQueue(1), rules_udp, pkt_size)
-	end
-	if table.getn(rules_icmp) > 0 then
-		lm.startTask("simple_forward_icmp", args.dev[1]:getTxQueue(2), rules_icmp, pkt_size)
-	end
+
+
+        if table.getn(rules_tcp) > 0 then
+                tcp_task = lm.startTask("task_forward_tcp", args.dev[1]:getTxQueue(0), rules_tcp, pkt_size)
+        end
+        if table.getn(rules_udp) > 0 then
+                udp_task = lm.startTask("task_forward_udp", args.dev[1]:getTxQueue(1), rules_udp, pkt_size)
+        end
+        if table.getn(rules_icmp) > 0 then
+                icmp_task = lm.startTask("task_forward_icmp", args.dev[1]:getTxQueue(2), rules_icmp, pkt_size)
+        end
 
 
 	lm.waitForTasks()
 
 end
 
+--  Task looping on huge tables
 
-function simple_forward_tcp(txQueue, rules, pkt_size)
-	local framesize=pkt_size
-        local counter=1
-	local nrules=table.getn(rules)
-
-
+function task_forward_tcp(txQueue, rules, framesize)
 	local tcpPayloadLen = framesize - 14 - 20 - 20
 	local tcpPayload = ffi.new("uint8_t[?]", tcpPayloadLen)
 	for i = 0, tcpPayloadLen - 1 do
 		--tcpPayload[i] = bit:band(i, 0xF)
 		tcpPayload[i] = bit:band(math.random(0xFF), 0xFF)
 	end
-
 
 	local mem = memory.createMemPool(function(buf)
 		local pkt = buf:getTcpPacket()
@@ -174,11 +209,99 @@ function simple_forward_tcp(txQueue, rules, pkt_size)
 	end)
 
 
+        local timer = timer:new(25)
+        while (timer:running()) do
+		for i,j in pairs(rules) do
+			if table.getn(j) > 0 then
+				simple_forward_tcp(txQueue, j, framesize, mem)
+			end
+			if not (timer:running()) then break end
+		end
+	end
+
+	memory.freeMemPools()
+	lm.stop()
+end
+
+function task_forward_udp(txQueue, rules, framesize)
+	local udpPayloadLen = framesize - 14 - 20 - 8
+	local udpPayload = ffi.new("uint8_t[?]", udpPayloadLen)
+	for i = 0, udpPayloadLen - 1 do
+		--udpPayload[i] = bit:band(i, 0xF)
+		udpPayload[i] = bit:band(math.random(0xFF), 0xFF)
+	end
+
+	local mem = memory.createMemPool(function(buf)
+		local pkt = buf:getUdpPacket()
+		pkt:fill{
+			pktlength=framesize,
+			ethSrc = txQueue,
+			ethDst = "00:25:b5:01:00:0f",
+		}
+		-- fill udp payload with prepared udp payload
+		ffi.copy(pkt.payload, udpPayload, udpPayloadLen)
+
+	end)
+
+
+        local timer = timer:new(25)
+        while (timer:running()) do
+		for i,j in pairs(rules) do
+			if table.getn(j) > 0 then
+				simple_forward_udp(txQueue, j, framesize, mem)
+			end
+			if not (timer:running()) then break end
+		end
+	end
+	memory.freeMemPools()
+	lm.stop()
+end
+
+function task_forward_icmp(txQueue, rules, framesize)
+	local icmpBodyLen = framesize - 14 - 20 - 4
+	local icmpBody = ffi.new("uint8_t[?]", icmpBodyLen)
+	for i = 0, icmpBodyLen - 1 do
+		--icmpBody[i] = bit:band(i, 0xF)
+		icmpBody[i] = bit:band(math.random(0xFF), 0xFF)
+	end
+
+	local mem = memory.createMemPool(function(buf)
+		local pkt = buf:getIcmpPacket()
+		pkt:fill{
+			pktlength=framesize,
+			ethSrc = txQueue,
+			ethDst = "00:25:b5:01:00:0f",
+			pkt.icmp:setType(icmp.ECHO_REPLY.type)
+		}
+
+		-- fill udp payload with prepared tcp payload
+		ffi.copy(pkt.payload, icmpBody, icmpBodyLen)
+	end)
+
+
+        local timer = timer:new(25)
+        while (timer:running()) do
+		for i,j in pairs(rules) do
+			if table.getn(j) > 0 then
+				simple_forward_icmp(txQueue, j, framesize, mem)
+			end
+			if not (timer:running()) then break end
+		end
+	end
+	memory.freeMemPools()
+	lm.stop()
+end
+
+--  TASK details
+
+function simple_forward_tcp(txQueue, rules, framesize, mem)
+        local counter=1
+	local nrules=table.getn(rules)
+
 	local bufs = mem:bufArray()
 
 	local totalSent = 0
-	local timer = timer:new(25)
-	while (timer:running()) do
+	while (true) do
 		bufs:alloc(framesize)
 
 		for _, buf in ipairs(bufs) do
@@ -195,48 +318,26 @@ function simple_forward_tcp(txQueue, rules, pkt_size)
 			--pkt.ip4:getString()
 		end
 		bufs:offloadTcpChecksums()
-		txQueue:send(bufs)
-		--totalSent = totalSent + txQueue:send(bufs)
+		--txQueue:send(bufs)
+		totalSent = totalSent + txQueue:send(bufs)
+		if totalSent >= (nrules - 1) then break end
 	end
 
+	bufs:freeAll()
 --	printf ("Total sent: %d", totalSent)
 
-	lm.stop()
 
 end
 
 
-function simple_forward_udp(txQueue, rules, pkt_size)
-	local framesize=pkt_size
+function simple_forward_udp(txQueue, rules, framesize, mem)
         local counter=1
 	local nrules=table.getn(rules)
-
-	local udpPayloadLen = framesize - 14 - 20 - 8
-	local udpPayload = ffi.new("uint8_t[?]", udpPayloadLen)
-	for i = 0, udpPayloadLen - 1 do
-		--udpPayload[i] = bit:band(i, 0xF)
-		udpPayload[i] = bit:band(math.random(0xFF), 0xFF)
-	end
-
-
-	local mem = memory.createMemPool(function(buf)
-		local pkt = buf:getUdpPacket()
-		pkt:fill{
-			pktlength=framesize,
-			ethSrc = txQueue,
-			ethDst = "00:25:b5:01:00:0f",
-		}
-		-- fill udp payload with prepared udp payload
-		ffi.copy(pkt.payload, udpPayload, udpPayloadLen)
-
-	end)
-
 
 	local bufs = mem:bufArray()
 
 	local totalSent = 0
-	local timer = timer:new(25)
-	while (timer:running()) do
+	while (true) do
 		bufs:alloc(framesize)
 
 		for _, buf in ipairs(bufs) do
@@ -252,49 +353,26 @@ function simple_forward_udp(txQueue, rules, pkt_size)
 			--pkt.ip4:getString()
 		end
 		bufs:offloadUdpChecksums()
-		txQueue:send(bufs)
-		--totalSent = totalSent + txQueue:send(bufs)
+		--txQueue:send(bufs)
+		totalSent = totalSent + txQueue:send(bufs)
+		if totalSent > (nrules - 1) then break end
 	end
 
+	bufs:freeAll()
 --	printf ("Total sent: %d", totalSent)
 
-	lm.stop()
 
 end
 
 
-function simple_forward_icmp(txQueue, rules, pkt_size)
-	local framesize=pkt_size
+function simple_forward_icmp(txQueue, rules, framesize, mem)
         local counter=1
 	local nrules=table.getn(rules)
-
-	local icmpBodyLen = framesize - 14 - 20 - 4
-	local icmpBody = ffi.new("uint8_t[?]", icmpBodyLen)
-	for i = 0, icmpBodyLen - 1 do
-		--icmpBody[i] = bit:band(i, 0xF)
-		icmpBody[i] = bit:band(math.random(0xFF), 0xFF)
-	end
-
-
-	local mem = memory.createMemPool(function(buf)
-		local pkt = buf:getIcmpPacket()
-		pkt:fill{
-			pktlength=framesize,
-			ethSrc = txQueue,
-			ethDst = "00:25:b5:01:00:0f",
-			pkt.icmp:setType(icmp.ECHO_REPLY.type)
-		}
-
-		-- fill udp payload with prepared tcp payload
-		ffi.copy(pkt.payload, icmpBody, icmpBodyLen)
-	end)
-
 
 	local bufs = mem:bufArray()
 
 	local totalSent = 0
-	local timer = timer:new(25)
-	while (timer:running()) do
+	while (true) do
 		bufs:alloc(framesize)
 
 		for _, buf in ipairs(bufs) do
@@ -310,13 +388,14 @@ function simple_forward_icmp(txQueue, rules, pkt_size)
 			--pkt.ip4:getString()
 		end
 		bufs:offloadIPChecksums()
-		--totalSent = totalSent + txQueue:send(bufs)
-		txQueue:send(bufs)
+		--txQueue:send(bufs)
+		totalSent = totalSent + txQueue:send(bufs)
+		if totalSent >= (nrules - 1) then break end
 	end
 
+	bufs:freeAll()
 --	printf ("Total sent: %d", totalSent)
 
-	lm.stop()
 
 end
 
@@ -330,7 +409,7 @@ function file_exists(file)
   local f = io.open(file, "rb")
   if f then 
 	f:close() 
-	print("Error with file! " .. file)
+	--print("Error with file! " .. file)
 	end
   return f ~= nil
 end
@@ -345,8 +424,5 @@ function lines_from(file)
   end
   return lines
 end
-
-
-
 
 -- =========================================================
