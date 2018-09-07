@@ -9,14 +9,12 @@ local math   = require "math"
 local bit    = require "bitopt"
 local ffi    = require "ffi"
 local icmp   = require "proto.icmp"
---local vtask  = require ("valetask") 
+local vtask  = require ("valetask") 
 
 
 function configure(parser)
 	parser:argument("dev", "Devices to use."):args(2):convert(tonumber)	-- args(min_number_of_args)
 	parser:argument("filename", "Filename with classbench trace"):args(1)
-	--parser:argument("filename", "Filename with classbench trace"):args(1):convert(io.open)	
-	parser:option("-t --threads", "Number of threads per forwarding direction using RSS."):args(1):convert(tonumber):default(1)
 	parser:option("-s --size", "Packet size."):default(60):convert(tonumber)
 	parser:option("-r --txrate", "TX_Rate - in MBit/s."):args(1):convert(tonumber):default(0)
 	return parser:parse()
@@ -32,37 +30,54 @@ function master(args)
 		args.dev[i] = device.config{
 			port = dev,
 			speed = txrate,
-			-- leonardo: using a single queue
 			txQueues = RX_TX_QUEUES,
 			rxQueues = RX_TX_QUEUES,
 			rssQueues = RX_TX_QUEUES
 		}
 	end
 
-	--Added by Valerio
-	print("Valerio parser")
-	--local file="/home/valerio/filters/acl1_100_trace"
 	local file=args.filename
 	print("Filename: " .. file)
 	local lines = lines_from(file)
-	local rules_icmp = {}
-	local rules_tcp = {}
-	local rules_udp = {}
+	local tab_thr = 900
+
+	local rules_icmp = {{}}
+	local icmp_index=1
+	local rules_tcp = {{}}
+	local tcp_index=1
+	local rules_udp = {{}}
+	local udp_index=1
+
 	--File parsing
 	for k,v in pairs(lines) do
 		--  print('line[' .. k .. ']', v)
 		local words = {}
 		local i=1
+
+
 		for w in (v .. "\t"):gmatch("([^\t]*)\t") do
 			table.insert(words, tonumber(w))
 			i=i+1
 		end
+
 		if tonumber(words[5]) == 1 then
-			table.insert(rules_icmp, words)
+			table.insert(rules_icmp[icmp_index], words)
+			if table.getn(rules_icmp[icmp_index]) > tab_thr then
+				icmp_index = icmp_index + 1;
+				table.insert(rules_icmp, {})
+			end
 		elseif tonumber(words[5]) == 6 then
-			table.insert(rules_tcp, words)
+			table.insert(rules_tcp[tcp_index], words)
+			if table.getn(rules_tcp[tcp_index]) > tab_thr then
+				tcp_index = tcp_index + 1;
+				table.insert(rules_tcp, {})
+			end
 		else 
-			table.insert(rules_udp, words)
+			table.insert(rules_udp[udp_index], words)
+			if table.getn(rules_udp[udp_index]) > tab_thr then
+				udp_index = udp_index + 1;
+				table.insert(rules_udp, {})
+			end
 		end
 	end
 
@@ -77,22 +92,37 @@ function master(args)
 --]]
 	
 
-	local tcp_nrules = table.getn(rules_tcp)
-	local udp_nrules = table.getn(rules_udp)
-	local icmp_nrules = table.getn(rules_icmp)
+	local tcp_nrules = 0
+	local udp_nrules = 0
+	local icmp_nrules = 0
+
+	print("TCP: "..table.getn(rules_tcp))
+	for k,v in pairs(rules_tcp) do
+		tcp_nrules = tcp_nrules + table.getn(v)
+		--print("Index "..k.." : "..table.getn(v))
+	end
+	print("UDP: "..table.getn(rules_udp))
+	for k,v in pairs(rules_udp) do
+		udp_nrules = udp_nrules + table.getn(v)
+		--print("Index "..k.." : "..table.getn(v))
+	end
+	print("ICMP: "..table.getn(rules_icmp))
+	for k,v in pairs(rules_icmp) do
+		icmp_nrules = icmp_nrules + table.getn(v)
+		--print("Index "..k.." : "..table.getn(v))
+	end
+
+	print("Tcp: " .. tcp_nrules .. " |Udp: " .. udp_nrules .. " |Icmp: " .. icmp_nrules)
 	local tot_rules = tcp_nrules + udp_nrules + icmp_nrules 
 	print("Tot_rules: " .. tot_rules)
-	print("Tcp: " .. tcp_nrules .. " |Udp: " .. udp_nrules .. " |Icmp: " .. icmp_nrules)
-	print("Valerio parser end")
-
-	--Valerio end
+	print("Traceset parser ends")
 
 
 	device.waitForLinks()
 
+	--Official statistic generator
+--	stats.startStatsTask{devices = args.dev}
 
-	stats.startStatsTask{devices = args.dev}
---[[
 	--Valerio's stats
 	local vtargs = {}
 	-- print stats
@@ -103,7 +133,8 @@ function master(args)
 	vtask.startStatsTask(vtargs)
 
 	--Valerio end
-]]--
+
+
 
 	print("Pkt size: " .. args.size)	
 	pkt_size = args.size
@@ -112,49 +143,41 @@ function master(args)
 	rateq1 = math.floor(txrate * tcp_nrules/tot_rules)
 	rateq2 = math.ceil(txrate * udp_nrules/tot_rules)
 	rateq3 = math.ceil(txrate * icmp_nrules/tot_rules)
-]]--
+--]]
 	rateq1 = txrate
 	rateq2 = txrate
 	rateq3 = txrate
-
 	print("TX rate: " .. txrate .. " rateq1: " .. rateq1 .. " rateq2: ".. rateq2 .. " rateq3: " .. rateq3)	
---	local TxQueue0 = args.dev[1]:getTxQueue(0)
---	local TxQueue0 = args.dev[1]:getTxQueue(0):setRate(rateq1)
 
 	args.dev[1]:getTxQueue(0):setRate(rateq1)
 	args.dev[1]:getTxQueue(1):setRate(rateq2)
 	args.dev[1]:getTxQueue(2):setRate(rateq3)
 
-	-- Using a single queue
 	--TX tasks
-	if table.getn(rules_tcp) > 0 then
-		lm.startTask("simple_forward_tcp", args.dev[1]:getTxQueue(0), rules_tcp, pkt_size)
-	end
-	if table.getn(rules_udp) > 0 then
-		lm.startTask("simple_forward_udp", args.dev[1]:getTxQueue(1), rules_udp, pkt_size)
-	end
-	if table.getn(rules_icmp) > 0 then
-		lm.startTask("simple_forward_icmp", args.dev[1]:getTxQueue(2), rules_icmp, pkt_size)
-	end
+        if table.getn(rules_tcp) > 0 then
+                tcp_task = lm.startTask("task_forward_tcp", args.dev[1]:getTxQueue(0), rules_tcp, pkt_size)
+        end
+        if table.getn(rules_udp) > 0 then
+                udp_task = lm.startTask("task_forward_udp", args.dev[1]:getTxQueue(1), rules_udp, pkt_size)
+        end
+        if table.getn(rules_icmp) > 0 then
+                icmp_task = lm.startTask("task_forward_icmp", args.dev[1]:getTxQueue(2), rules_icmp, pkt_size)
+        end
 
 
 	lm.waitForTasks()
 
 end
 
+--  Task looping on huge tables
 
-function simple_forward_tcp(txQueue, rules, pkt_size)
-	local framesize=pkt_size
-        local counter=1
-	local nrules=table.getn(rules)
-
+function task_forward_tcp(txQueue, rules, framesize)
 	local tcpPayloadLen = framesize - 14 - 20 - 20
 	local tcpPayload = ffi.new("uint8_t[?]", tcpPayloadLen)
 	for i = 0, tcpPayloadLen - 1 do
 		--tcpPayload[i] = bit:band(i, 0xF)
 		tcpPayload[i] = bit:band(math.random(0xFF), 0xFF)
 	end
-
 
 	local mem = memory.createMemPool(function(buf)
 		local pkt = buf:getTcpPacket()
@@ -173,57 +196,23 @@ function simple_forward_tcp(txQueue, rules, pkt_size)
 	end)
 
 
-	local bufs = mem:bufArray()
-
-	local totalSent = 0
-	while (true) do
-		bufs:alloc(framesize)
-
-		for _, buf in ipairs(bufs) do
-			local pkt = buf:getTcpPacket()
-			local pointer = rules[counter]
-			pkt.ip4:setSrc(pointer[1])
-			pkt.ip4:setDst(pointer[2])
-			pkt.tcp:setSrcPort(pointer[3])
-			pkt.tcp:setDstPort(pointer[4])
-			if counter < (nrules - 1) then counter = counter +1 
-			else break end
-			--print(pointer[1] .. ", " .. pointer[2] .. ", " .. pointer[3] .. ", " .. pointer[4] )
-			--buf:dump()
-			--pkt.ip4:getString()
+	for i,j in pairs(rules) do
+		if table.getn(j) > 0 then
+			simple_forward_tcp(txQueue, j, framesize, mem)
 		end
-		bufs:offloadIPChecksums()
-		bufs:offloadTcpChecksums()
---[[
-		for _, buf in ipairs(bufs) do
-			buf:dump()
-		end
-]]--
-
-		--totalSent = totalSent + txQueue:send(bufs)
-		txQueue:send(bufs)
-		if counter >= (nrules - 1) then break end
 	end
 
---	printf ("Total sent: %d", totalSent)
-
+	memory.freeMemPools()
 	lm.stop()
-
 end
 
-
-function simple_forward_udp(txQueue, rules, pkt_size)
-	local framesize=pkt_size
-        local counter=1
-	local nrules=table.getn(rules)
-
+function task_forward_udp(txQueue, rules, framesize)
 	local udpPayloadLen = framesize - 14 - 20 - 8
 	local udpPayload = ffi.new("uint8_t[?]", udpPayloadLen)
 	for i = 0, udpPayloadLen - 1 do
 		--udpPayload[i] = bit:band(i, 0xF)
 		udpPayload[i] = bit:band(math.random(0xFF), 0xFF)
 	end
-
 
 	local mem = memory.createMemPool(function(buf)
 		local pkt = buf:getUdpPacket()
@@ -238,54 +227,22 @@ function simple_forward_udp(txQueue, rules, pkt_size)
 	end)
 
 
-	local bufs = mem:bufArray()
-
-	local totalSent = 0
-	while (true) do
-		bufs:alloc(framesize)
-
-		for _, buf in ipairs(bufs) do
-			local pkt = buf:getUdpPacket()
-			local pointer = rules[counter]
-			pkt.ip4:setSrc(pointer[1])
-			pkt.ip4:setDst(pointer[2])
-			pkt.udp:setSrcPort(pointer[3])
-			pkt.udp:setDstPort(pointer[4])
-			if counter < (nrules - 1) then counter = counter +1 
-			else break end
-			--buf:dump()
-			--pkt.ip4:getString()
+	for i,j in pairs(rules) do
+		if table.getn(j) > 0 then
+			simple_forward_udp(txQueue, j, framesize, mem)
 		end
-		bufs:offloadUdpChecksums()
---[[
-		for _, buf in ipairs(bufs) do
-			buf:dump()
-		end
-]]--
-		--totalSent = totalSent + txQueue:send(bufs)
-		txQueue:send(bufs)
-		if counter >= (nrules - 1) then break end
 	end
-
---	printf ("Total sent: %d", totalSent)
-
+	memory.freeMemPools()
 	lm.stop()
-
 end
 
-
-function simple_forward_icmp(txQueue, rules, pkt_size)
-	local framesize=pkt_size
-        local counter=1
-	local nrules=table.getn(rules)
-
+function task_forward_icmp(txQueue, rules, framesize)
 	local icmpBodyLen = framesize - 14 - 20 - 4
 	local icmpBody = ffi.new("uint8_t[?]", icmpBodyLen)
 	for i = 0, icmpBodyLen - 1 do
 		--icmpBody[i] = bit:band(i, 0xF)
 		icmpBody[i] = bit:band(math.random(0xFF), 0xFF)
 	end
-
 
 	local mem = memory.createMemPool(function(buf)
 		local pkt = buf:getIcmpPacket()
@@ -301,6 +258,91 @@ function simple_forward_icmp(txQueue, rules, pkt_size)
 	end)
 
 
+	for i,j in pairs(rules) do
+		if table.getn(j) > 0 then
+			simple_forward_icmp(txQueue, j, framesize, mem)
+		end
+	end
+	memory.freeMemPools()
+	lm.stop()
+end
+
+--  TASK details (sending packets)
+function simple_forward_tcp(txQueue, rules, framesize, mem)
+        local counter=1
+	local nrules=table.getn(rules)
+
+	local bufs = mem:bufArray()
+
+	local totalSent = 0
+	while (true) do
+		bufs:alloc(framesize)
+
+		for _, buf in ipairs(bufs) do
+			local pkt = buf:getTcpPacket()
+			local pointer = rules[counter]
+			pkt.ip4:setSrc(pointer[1])
+			pkt.ip4:setDst(pointer[2])
+			pkt.tcp:setSrcPort(pointer[3])
+			pkt.tcp:setDstPort(pointer[4])
+			if counter < (nrules - 1) then counter = counter +1 
+			else counter = 1 end
+			--print(pointer[1] .. ", " .. pointer[2] .. ", " .. pointer[3] .. ", " .. pointer[4] )
+			--buf:dump()
+			--pkt.ip4:getString()
+		end
+		bufs:offloadTcpChecksums()
+		--txQueue:send(bufs)
+		totalSent = totalSent + txQueue:send(bufs)
+		if totalSent >= (nrules - 1) then break end
+	end
+
+	bufs:freeAll()
+--	printf ("Total sent: %d", totalSent)
+
+
+end
+
+
+function simple_forward_udp(txQueue, rules, framesize, mem)
+        local counter=1
+	local nrules=table.getn(rules)
+
+	local bufs = mem:bufArray()
+
+	local totalSent = 0
+	while (true) do
+		bufs:alloc(framesize)
+
+		for _, buf in ipairs(bufs) do
+			local pkt = buf:getUdpPacket()
+			local pointer = rules[counter]
+			pkt.ip4:setSrc(pointer[1])
+			pkt.ip4:setDst(pointer[2])
+			pkt.udp:setSrcPort(pointer[3])
+			pkt.udp:setDstPort(pointer[4])
+			if counter < (nrules - 1) then counter = counter +1 
+			else counter = 1 end
+			--buf:dump()
+			--pkt.ip4:getString()
+		end
+		bufs:offloadUdpChecksums()
+		--txQueue:send(bufs)
+		totalSent = totalSent + txQueue:send(bufs)
+		if totalSent > (nrules - 1) then break end
+	end
+
+	bufs:freeAll()
+--	printf ("Total sent: %d", totalSent)
+
+
+end
+
+
+function simple_forward_icmp(txQueue, rules, framesize, mem)
+        local counter=1
+	local nrules=table.getn(rules)
+
 	local bufs = mem:bufArray()
 
 	local totalSent = 0
@@ -315,24 +357,19 @@ function simple_forward_icmp(txQueue, rules, pkt_size)
 			pkt.icmp:calculateChecksum(pkt.ip4:getLength() - pkt.ip4:getHeaderLength() * 4)
 			pkt.ip4:setChecksum(0)
 			if counter < (nrules - 1) then counter = counter +1 
-			else break end
+			else counter = 1 end
 			--buf:dump()
 			--pkt.ip4:getString()
 		end
 		bufs:offloadIPChecksums()
-		--totalSent = totalSent + txQueue:send(bufs)
---[[
-		for _, buf in ipairs(bufs) do
-			buf:dump()
-		end
-]]--
-		txQueue:send(bufs)
-		if counter >= (nrules - 1) then break end
+		--txQueue:send(bufs)
+		totalSent = totalSent + txQueue:send(bufs)
+		if totalSent >= (nrules - 1) then break end
 	end
 
+	bufs:freeAll()
 --	printf ("Total sent: %d", totalSent)
 
-	lm.stop()
 
 end
 
@@ -346,7 +383,7 @@ function file_exists(file)
   local f = io.open(file, "rb")
   if f then 
 	f:close() 
-	print("Error with file! " .. file)
+	--print("Error with file! " .. file)
 	end
   return f ~= nil
 end
@@ -361,8 +398,5 @@ function lines_from(file)
   end
   return lines
 end
-
-
-
 
 -- =========================================================

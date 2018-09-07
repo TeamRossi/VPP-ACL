@@ -15,8 +15,6 @@ local vtask  = require ("valetask")
 function configure(parser)
 	parser:argument("dev", "Devices to use."):args(2):convert(tonumber)	-- args(min_number_of_args)
 	parser:argument("filename", "Filename with classbench trace"):args(1)
-	--parser:argument("filename", "Filename with classbench trace"):args(1):convert(io.open)	
-	parser:option("-t --threads", "Number of threads per forwarding direction using RSS."):args(1):convert(tonumber):default(1)
 	parser:option("-s --size", "Packet size."):default(60):convert(tonumber)
 	parser:option("-r --txrate", "TX_Rate - in MBit/s."):args(1):convert(tonumber):default(0)
 	return parser:parse()
@@ -32,16 +30,12 @@ function master(args)
 		args.dev[i] = device.config{
 			port = dev,
 			speed = txrate,
-			-- leonardo: using a single queue
 			txQueues = RX_TX_QUEUES,
 			rxQueues = RX_TX_QUEUES,
 			rssQueues = RX_TX_QUEUES
 		}
 	end
 
-	--Added by Valerio
-	print("Valerio parser")
-	--local file="/home/valerio/filters/acl1_100_trace"
 	local file=args.filename
 	print("Filename: " .. file)
 	local lines = lines_from(file)
@@ -121,14 +115,12 @@ function master(args)
 	print("Tcp: " .. tcp_nrules .. " |Udp: " .. udp_nrules .. " |Icmp: " .. icmp_nrules)
 	local tot_rules = tcp_nrules + udp_nrules + icmp_nrules 
 	print("Tot_rules: " .. tot_rules)
-	--Valerio end
-	print("Valerio parser end")
+	print("Traceset parser ends")
 
-	--os.exit()
 
 	device.waitForLinks()
 
-
+	--Official statistic generator
 --	stats.startStatsTask{devices = args.dev}
 
 	--Valerio's stats
@@ -156,17 +148,12 @@ function master(args)
 	rateq2 = txrate
 	rateq3 = txrate
 	print("TX rate: " .. txrate .. " rateq1: " .. rateq1 .. " rateq2: ".. rateq2 .. " rateq3: " .. rateq3)	
---	local TxQueue0 = args.dev[1]:getTxQueue(0)
---	local TxQueue0 = args.dev[1]:getTxQueue(0):setRate(rateq1)
 
 	args.dev[1]:getTxQueue(0):setRate(rateq1)
 	args.dev[1]:getTxQueue(1):setRate(rateq2)
 	args.dev[1]:getTxQueue(2):setRate(rateq3)
 
-	-- Using a single queue
 	--TX tasks
-
-
         if table.getn(rules_tcp) > 0 then
                 tcp_task = lm.startTask("task_forward_tcp", args.dev[1]:getTxQueue(0), rules_tcp, pkt_size)
         end
@@ -292,8 +279,7 @@ function task_forward_icmp(txQueue, rules, framesize)
 	lm.stop()
 end
 
---  TASK details
-
+--  TASK details (sending packets)
 function simple_forward_tcp(txQueue, rules, framesize, mem)
         local counter=1
 	local nrules=table.getn(rules)
