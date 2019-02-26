@@ -25,6 +25,8 @@
 
 
 #define TABLESIZE 4096
+//#define TABLESIZE 1024
+//#define TABLESIZE 32
 #define NUMFLOWS 10240
 
 #define ACL_FE_CACHE_TIMESHIFT  25
@@ -35,6 +37,7 @@
 
 typedef struct {
   u8 is_valid;
+  u32 flow_hash;
   /* matched ACL */
   u32 acl_index;
   u32 ace_index;
@@ -233,11 +236,12 @@ u8 acl_flow_cache_access (fa_5tuple_t * flow, u32 * acl_index,
 	    ft_entry->entry_pointer = flow_entry;
 	    flow_entry->hitcount = 0;
 	    flow_entry->is_valid = 0;
+	    flow_entry->flow_hash = hash0;
     }else{
 	    flow_entry = (acl_cache_hash_entry_t *) ft_entry->entry_pointer;
     }
 
-    if( flow_entry->is_valid ){
+    if( flow_entry->is_valid && (flow_entry->flow_hash == hash0)){
 	    *acl_index = flow_entry->acl_index;
 	    *ace_index = flow_entry->ace_index;
 	    action = flow_entry->action;
@@ -274,6 +278,7 @@ void acl_flow_cache_upload (fa_5tuple_t * flow, u32 acl_index,
 	    //if it consume too much clock cycle is possible to think to pre-allocated a batch of pointers
 	    flow_entry = (acl_cache_hash_entry_t *) malloc(sizeof(acl_cache_hash_entry_t));	
 	    ft_entry->entry_pointer = flow_entry;
+	    flow_entry->flow_hash = hash0;
     }else{
 	    flow_entry = (acl_cache_hash_entry_t *) ft_entry->entry_pointer;
     }
@@ -367,6 +372,11 @@ show_acl_frontend_cache (vlib_main_t * vm, u32 is_verbose){
 		vlib_cli_output(vm, "| flows   \t| flows             \t|       \t|             \t|       \t|"); 
 		vlib_cli_output(vm, "|---------------------------------------------------------------------------------------|"); 
 		vlib_cli_output(vm, "| %8d\t| %8d (%8d)\t|%8d\t|%12ld\t|%12ld\t|", nflows, flows, cflows, valids, ghits, misses) ;
+		vlib_cli_output(vm, "|---------------------------------------------------------------------------------------|"); 
+		vlib_cli_output(vm, "|---------------------------------------------------------------------------------------|"); 
+		vlib_cli_output(vm, "| Total\t| Hitcount-tot\t| Misses\t|"); 
+		vlib_cli_output(vm, "|---------------------------------------------------------------------------------------|"); 
+		vlib_cli_output(vm, "| %12ld\t|%12ld\t|%12ld\t|", (ghits+misses), ghits, misses) ;
 		vlib_cli_output(vm, "|---------------------------------------------------------------------------------------|"); 
 
 	}
